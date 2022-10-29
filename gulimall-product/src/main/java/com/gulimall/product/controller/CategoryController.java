@@ -1,8 +1,9 @@
 package com.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.utils.PageUtils;
+import com.gulimall.common.utils.R;
+import com.gulimall.product.entity.CategoryEntity;
+import com.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.product.entity.CategoryEntity;
-import com.gulimall.product.service.CategoryService;
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -40,6 +40,15 @@ public class CategoryController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 以树形结构返回商品类型列表
+     */
+    @RequestMapping("/list/tree")
+    public R listWithTree(){
+        List<CategoryEntity> categoryList = categoryService.listWithTree();
+
+        return R.ok().put("categoryList", categoryList);
+    }
 
     /**
      * 信息
