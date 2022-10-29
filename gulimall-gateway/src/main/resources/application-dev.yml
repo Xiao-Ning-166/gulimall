@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        # 路由的id
+        - id: admin_router
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-admin
+          # 匹配规则
+          predicates:
+            - Path=/api/**
+          # 过滤器配置
+          filters:
+            - RewritePath=/api/(?<segment>.*), /admin/$\{segment}
