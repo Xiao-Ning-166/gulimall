@@ -81,4 +81,16 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         return children;
     }
 
+
+    /**
+     * 通过id批量删除类别
+     *
+     * @param ids
+     */
+    @Override
+    public void removeCategoryByIds(List<Long> ids) {
+        // TODO 检查类别是否被其他地方引用，如果引用，则不能删除
+        removeByIds(ids);
+    }
+
 }

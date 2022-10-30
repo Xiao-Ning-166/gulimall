@@ -5,6 +5,7 @@ import com.gulimall.common.utils.R;
 import com.gulimall.product.entity.CategoryEntity;
 import com.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,9 +84,10 @@ public class CategoryController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping()
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+
+        categoryService.removeCategoryByIds(Arrays.asList(catIds));
 
         return R.ok();
     }

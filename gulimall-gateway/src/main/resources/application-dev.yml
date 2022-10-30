@@ -2,6 +2,18 @@ spring:
   cloud:
     gateway:
       routes:
+        # 商品服务
+        - id: product_router
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-product
+          # 匹配规则
+          predicates:
+            - Path=/api/product/**
+          # 过滤器配置
+          filters:
+            # 路径重写 /api/** ==> /**
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
         # 路由的id
         - id: admin_router
           # 匹配后提供服务的地址
