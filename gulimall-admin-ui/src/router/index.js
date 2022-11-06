@@ -1,172 +1,198 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import http from '@/utils/request'
-import { isURL } from '@/utils/validate'
 
 Vue.use(Router)
 
-// 页面路由(独立页面)
-export const pageRoutes = [
+/* Layout */
+import Layout from '@/layout'
+
+/**
+ * Note: sub-menu only appear when route children.length >= 1
+ * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ *
+ * hidden: true                   if set true, item will not show in the sidebar(default is false)
+ * alwaysShow: true               if set true, will always show the root menu
+ *                                if not set alwaysShow, when item has more than one children route,
+ *                                it will becomes nested mode, otherwise not show the root menu
+ * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
+ * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * meta : {
+    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
+    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+  }
+ */
+
+/**
+ * constantRoutes 代表那些不需要动态判断权限的路由，如登录页、404、等通用页面。
+ * a base page that does not have permission requirements
+ * all roles can be accessed
+ */
+export const constantRoutes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    // 当设置 true 的时候该路由不会在侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
+    hidden: true
+  },
+
   {
     path: '/404',
-    component: () => import('@/views/pages/404'),
-    name: '404',
-    meta: { title: '404未找到' },
-    beforeEnter (to, from, next) {
-      // 拦截处理特殊业务场景
-      // 如果, 重定向路由包含__双下划线, 为临时添加路由
-      if (/__.*/.test(to.redirectedFrom)) {
-        return next(to.redirectedFrom.replace(/__.*/, ''))
-      }
-      next()
-    }
+    component: () => import('@/views/404'),
+    hidden: true
   },
-  { path: '/login', component: () => import('@/views/pages/login'), name: 'login', meta: { title: '登录' } }
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {
+        // 设置该路由在侧边栏和面包屑中展示的名字
+        title: '首页',
+        // 设置该路由的图标，支持 svg-class，也支持 el-icon-x element-ui 的 icon
+        icon: 'dashboard'
+      }
+    }]
+  },
+
+  {
+    path: '/example',
+    component: Layout,
+    redirect: '/example/table',
+    name: 'Example',
+    meta: { title: '示例', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: { title: 'Table', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: 'Tree', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/form',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: { title: '表单', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/nested',
+    component: Layout,
+    redirect: '/nested/menu1',
+    name: 'Nested',
+    meta: {
+      title: '菜单',
+      icon: 'nested'
+    },
+    children: [
+      {
+        path: 'menu1',
+        component: () => import('@/views/nested/menu1/index'), // Parent router-view
+        name: 'Menu1',
+        meta: { title: 'Menu1' },
+        children: [
+          {
+            path: 'menu1-1',
+            component: () => import('@/views/nested/menu1/menu1-1'),
+            name: 'Menu1-1',
+            meta: { title: 'Menu1-1' }
+          },
+          {
+            path: 'menu1-2',
+            component: () => import('@/views/nested/menu1/menu1-2'),
+            name: 'Menu1-2',
+            meta: { title: 'Menu1-2' },
+            children: [
+              {
+                path: 'menu1-2-1',
+                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
+                name: 'Menu1-2-1',
+                meta: { title: 'Menu1-2-1' }
+              },
+              {
+                path: 'menu1-2-2',
+                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
+                name: 'Menu1-2-2',
+                meta: { title: 'Menu1-2-2' }
+              }
+            ]
+          },
+          {
+            path: 'menu1-3',
+            component: () => import('@/views/nested/menu1/menu1-3'),
+            name: 'Menu1-3',
+            meta: { title: 'Menu1-3' }
+          }
+        ]
+      },
+      {
+        path: 'menu2',
+        component: () => import('@/views/nested/menu2/index'),
+        name: 'Menu2',
+        meta: { title: 'menu2' }
+      }
+    ]
+  },
+
+  {
+    path: 'external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+        meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  }
+
+  // 404 page must be placed at the end !!!
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
-// 模块路由(基于主入口布局页面)
-export const moduleRoutes = {
-  path: '/',
-  component: () => import('@/views/main'),
-  name: 'main',
-  redirect: { name: 'home' },
-  meta: { title: '主入口布局' },
-  children: [
-    { path: '/home', component: () => import('@/views/modules/home'), name: 'home', meta: { title: '首页', isTab: true } }
-  ]
-}
+/**
+ * asyncRoutes
+ * 动态路由，根据用户角色动态加载菜单路由
+ */
+export const asyncRoutes = [
 
-export function addDynamicRoute (routeParams, router) {
-  // 组装路由名称, 并判断是否已添加, 如是: 则直接跳转
-  var routeName = routeParams.routeName
-  var dynamicRoute = window.SITE_CONFIG['dynamicRoutes'].filter(item => item.name === routeName)[0]
-  if (dynamicRoute) {
-    return router.push({ name: routeName, params: routeParams.params })
-  }
-  // 否则: 添加并全局变量保存, 再跳转
-  dynamicRoute = {
-    path: routeName,
-    component: () => import(`@/views/modules/${routeParams.path}`),
-    name: routeName,
-    meta: {
-      ...window.SITE_CONFIG['contentTabDefault'],
-      menuId: routeParams.menuId,
-      title: `${routeParams.title}`
-    }
-  }
-  router.addRoutes([
-    {
-      ...moduleRoutes,
-      name: `main-dynamic__${dynamicRoute.name}`,
-      children: [dynamicRoute]
-    }
-  ])
-  window.SITE_CONFIG['dynamicRoutes'].push(dynamicRoute)
-  router.push({ name: dynamicRoute.name, params: routeParams.params })
-}
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
 
-const router = new Router({
-  mode: 'hash',
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: pageRoutes.concat(moduleRoutes)
+  routes: constantRoutes
 })
 
-router.beforeEach((to, from, next) => {
-  // 添加动态(菜单)路由
-  // 已添加或者当前路由为页面路由, 可直接访问
-  if (window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] || fnCurrentRouteIsPageRoute(to, pageRoutes)) {
-    return next()
-  }
-  // 获取字典列表, 添加并全局变量保存
-  // http.get('/sys/dict/type/all').then(({ data: res }) => {
-  //   if (res.code !== 0) {
-  //     return
-  //   }
-  //   window.SITE_CONFIG['dictList'] = res.data
-  // }).catch(() => {})
-  // 获取菜单列表, 添加并全局变量保存
-  http.get('/sys/menu/nav').then(({ data: res }) => {
-    console.log('菜单信息', res)
-    if (res.code !== 0) {
-      Vue.prototype.$message.error(res.msg)
-      return next({ name: 'login' })
-    }
-    window.SITE_CONFIG['menuList'] = res.data
-    debugger
-    fnAddDynamicMenuRoutes(window.SITE_CONFIG['menuList'])
-    next({ ...to, replace: true })
-  }).catch(() => {
-    next({ name: 'login' })
-  })
-})
+const router = createRouter()
 
-/**
- * 判断当前路由是否为页面路由
- * @param {*} route 当前路由
- * @param {*} pageRoutes 页面路由
- */
-function fnCurrentRouteIsPageRoute (route, pageRoutes = []) {
-  var temp = []
-  for (var i = 0; i < pageRoutes.length; i++) {
-    if (route.path === pageRoutes[i].path) {
-      return true
-    }
-    if (pageRoutes[i].children && pageRoutes[i].children.length >= 1) {
-      temp = temp.concat(pageRoutes[i].children)
-    }
-  }
-  return temp.length >= 1 ? fnCurrentRouteIsPageRoute(route, temp) : false
-}
-
-/**
- * 添加动态(菜单)路由
- * @param {*} menuList 菜单列表
- * @param {*} routes 递归创建的动态(菜单)路由
- */
-function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
-  var temp = []
-  for (var i = 0; i < menuList.length; i++) {
-    if (menuList[i].children && menuList[i].children.length >= 1) {
-      temp = temp.concat(menuList[i].children)
-      continue
-    }
-    // 组装路由
-    var route = {
-      path: '',
-      component: null,
-      name: '',
-      meta: {
-        ...window.SITE_CONFIG['contentTabDefault'],
-        menuId: menuList[i].id,
-        title: menuList[i].name
-      }
-    }
-    // eslint-disable-next-line
-    let URL = (menuList[i].url || '').replace(/{{([^}}]+)?}}/g, (s1, s2) => eval(s2)) // URL支持{{ window.xxx }}占位符变量
-    if (isURL(URL)) {
-      route['path'] = route['name'] = `i-${menuList[i].id}`
-      route['meta']['iframeURL'] = URL
-    } else {
-      URL = URL.replace(/^\//, '').replace(/_/g, '-')
-      route['path'] = route['name'] = URL.replace(/\//g, '-')
-      route['component'] = () => import(`@/views/modules/${URL}`)
-    }
-    routes.push(route)
-  }
-  if (temp.length >= 1) {
-    return fnAddDynamicMenuRoutes(temp, routes)
-  }
-  // 添加路由
-  router.addRoutes([
-    {
-      ...moduleRoutes,
-      name: 'main-dynamic-menu',
-      children: routes
-    },
-    { path: '*', redirect: { name: '404' } }
-  ])
-  window.SITE_CONFIG['dynamicMenuRoutes'] = routes
-  window.SITE_CONFIG['dynamicMenuRoutesHasAdded'] = true
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher // reset router
 }
 
 export default router

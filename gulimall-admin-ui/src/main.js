@@ -1,43 +1,43 @@
 import Vue from 'vue'
-import Element from 'element-ui'
-import App from '@/App'
-import i18n from '@/i18n'
-import router from '@/router'
-import store from '@/store'
-import '@/icons'
-import '@/element-ui/theme/index.css'
-import '@/assets/scss/aui.scss'
-import http from '@/utils/request'
-import renRadioGroup from '@/components/ren-radio-group'
-import renSelect from '@/components/ren-select'
-import renDeptTree from '@/components/ren-dept-tree'
-import renRegionTree from '@/components/ren-region-tree'
-import { hasPermission, getDictLabel } from '@/utils'
-import cloneDeep from 'lodash/cloneDeep'
+
+import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+
+import '@/styles/index.scss' // global css
+
+import App from './App'
+import store from './store'
+import router from './router'
+
+import '@/icons' // icon
+import '@/permission' // permission control
+
+/**
+ * If you don't want to use mock-server
+ * you want to use MockJs for mock api
+ * you can execute: mockXHR()
+ *
+ * Currently MockJs will be used in the production environment,
+ * please remove it before going online ! ! !
+ */
+if (process.env.NODE_ENV === 'production') {
+  const { mockXHR } = require('../mock')
+  mockXHR()
+}
+
+// set ElementUI lang to EN
+// Vue.use(ElementUI, { locale })
+// 如果想要中文版 element-ui，按如下方式声明
+Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-Vue.use(Element, {
-  size: 'default',
-  i18n: (key, value) => i18n.t(key, value)
-})
-
-Vue.use(renRadioGroup)
-Vue.use(renSelect)
-Vue.use(renDeptTree)
-Vue.use(renRegionTree)
-
-// 挂载全局
-Vue.prototype.$http = http
-Vue.prototype.$hasPermission = hasPermission
-Vue.prototype.$getDictLabel = getDictLabel
-
-// 保存整站vuex本地储存初始状态
-window.SITE_CONFIG['storeState'] = cloneDeep(store.state)
-
 new Vue({
-  i18n,
+  el: '#app',
   router,
   store,
   render: h => h(App)
-}).$mount('#app')
+})
