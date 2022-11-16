@@ -8,8 +8,10 @@ import com.gulimall.common.utils.Query;
 import com.gulimall.product.entity.CategoryEntity;
 import com.gulimall.product.mapper.CategoryMapper;
 import com.gulimall.product.service.CategoryService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,9 +36,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
      * @return
      */
     @Override
-    public List<CategoryEntity> listWithTree() {
+    public IPage<CategoryEntity> listWithTree(CategoryEntity categoryEntity, IPage<CategoryEntity> page) {
         // 1、查询所有分类
-        List<CategoryEntity> allCategoryList = query().list();
+        List<CategoryEntity> allCategoryList = query()
+                .like(StringUtils.isNotBlank(categoryEntity.getName()), "name", categoryEntity.getName())
+                .list();
 
         // 2、组装分类树形结构
         // 2.1、找到一级分类
@@ -52,8 +56,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
             return (category1.getSort() == null ? 0 : category1.getSort()) - (category2.getSort() == null ? 0 : category2.getSort());
         }).collect(Collectors.toList());
 
+        long from = (page.getCurrent() - 1) * page.getSize();
+        long size = page.getSize();
+
+        List<CategoryEntity> result = new ArrayList<CategoryEntity>();
+        for (long i = from; i < from + size && i < topCategoryList.size(); i++) {
+            result.add(topCategoryList.get(Math.toIntExact(i)));
+        }
+
+        page.setTotal(topCategoryList.size());
+        page.setRecords(result);
+        page.setPages(new Double(Math.ceil(topCategoryList.size() / page.getSize())).longValue());
+
         // 3、返回一级分类集合
-        return topCategoryList;
+        return page;
     }
 
     /**
@@ -71,6 +87,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         }).map((category) -> {
             // 找到子分类的子分类
             category.setChildren(getChildren(category, allCategoryList));
+            // 设置父分类名称
+            category.setParentName(currentCategory.getName());
             return category;
         }).sorted((category1, category2) -> {
             // 将子分类进行排序
@@ -91,6 +109,32 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
     public void removeCategoryByIds(List<Long> ids) {
         // TODO 检查类别是否被其他地方引用，如果引用，则不能删除
         removeByIds(ids);
+    }
+
+    /**
+     * 返回1、2级类别数据
+     *
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> listSelectTree() {
+        // 1、查询所有1、2级类别数据
+        List<CategoryEntity> categoryList = query().lt("cat_level", 3).list();
+
+        // 2、构造树形结构
+        List<CategoryEntity> topCategoryList = categoryList.stream().filter((category) -> {
+            return category.getCatLevel() == 1;
+        }).map((category) -> {
+            // 查询次级分类
+            List<CategoryEntity> children = getChildren(category, categoryList);
+            category.setChildren(children);
+            return category;
+        }).sorted((c1, c2) -> {
+            // 排序
+            return (c1.getSort() == null ? 0 : c1.getSort()) - (c2.getSort() == null ? 0 : c2.getSort());
+        }).collect(Collectors.toList());
+
+        return topCategoryList;
     }
 
 }

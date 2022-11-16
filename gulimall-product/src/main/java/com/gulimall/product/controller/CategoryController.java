@@ -1,5 +1,7 @@
 package com.gulimall.product.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gulimall.common.utils.PageUtils;
 import com.gulimall.common.utils.R;
 import com.gulimall.product.entity.CategoryEntity;
@@ -7,11 +9,13 @@ import com.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +47,33 @@ public class CategoryController {
 
     /**
      * 以树形结构返回商品类型列表
+     *
+     * @param categoryEntity
+     * @param current
+     * @param size
+     * @return
      */
     @RequestMapping("/list/tree")
-    public R listWithTree(){
-        List<CategoryEntity> categoryList = categoryService.listWithTree();
+    public R listWithTree(CategoryEntity categoryEntity,
+                          @RequestParam(value = "current", defaultValue = "1") Integer current,
+                          @RequestParam(value = "size", defaultValue = "10") Integer size,
+                          HttpServletRequest request){
+        IPage<CategoryEntity> page = new Page<>(current, size);
+        IPage<CategoryEntity> categoryPage = categoryService.listWithTree(categoryEntity, page);
 
-        return R.ok().put("categoryList", categoryList);
+        return R.ok().put("data", categoryPage);
+    }
+
+    /**
+     * 以树形结构返回商品类型列表（树形选择框）
+     *
+     * @return
+     */
+    @RequestMapping("/select/tree")
+    public R listSelectTree(){
+        List<CategoryEntity> categoryList = categoryService.listSelectTree();
+
+        return R.ok().put("data", categoryList);
     }
 
     /**
@@ -72,9 +97,9 @@ public class CategoryController {
     }
 
     /**
-     * 修改
+     * 修改分类信息
      */
-    @RequestMapping("/update")
+    @PutMapping("/update")
     public R update(@RequestBody CategoryEntity category){
 		categoryService.updateById(category);
 

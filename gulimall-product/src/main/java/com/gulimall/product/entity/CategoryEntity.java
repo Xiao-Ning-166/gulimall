@@ -35,13 +35,17 @@ public class CategoryEntity implements Serializable {
 	 */
 	private Long parentCid;
 	/**
+	 * 父分类名称
+	 */
+	@TableField(exist = false)
+	private String parentName;
+	/**
 	 * 层级
 	 */
 	private Integer catLevel;
 	/**
 	 * 是否显示[0-不显示，1显示]
 	 */
-	@TableLogic(value = "1", delval = "0")
 	private Integer showStatus;
 	/**
 	 * 排序
@@ -65,5 +69,11 @@ public class CategoryEntity implements Serializable {
 	 */
 	@TableField(exist = false)
 	private List<CategoryEntity> children;
+
+	/**
+	 * 是否删除。0-未删除 1-已删除
+	 */
+	@TableLogic(value = "0", delval = "1")
+	private Integer isDelete;
 
 }

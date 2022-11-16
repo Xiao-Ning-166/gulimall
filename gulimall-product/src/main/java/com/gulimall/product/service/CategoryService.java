@@ -1,5 +1,6 @@
 package com.gulimall.product.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.utils.PageUtils;
 import com.gulimall.product.entity.CategoryEntity;
@@ -19,11 +20,13 @@ public interface CategoryService extends IService<CategoryEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     /**
-     * 以树形结构返回类型列表
+     * 以树形结构返回商品类型列表
      *
+     * @param categoryEntity
+     * @param page
      * @return
      */
-    List<CategoryEntity> listWithTree();
+    IPage<CategoryEntity> listWithTree(CategoryEntity categoryEntity, IPage<CategoryEntity> page);
 
     /**
      * 通过id批量删除类别
@@ -31,5 +34,12 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @param ids
      */
     void removeCategoryByIds(List<Long> ids);
+
+    /**
+     * 返回1、2级类别数据
+     *
+     * @return
+     */
+    List<CategoryEntity> listSelectTree();
 }
 
