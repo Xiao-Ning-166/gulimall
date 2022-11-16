@@ -1,4 +1,4 @@
-import { getUserMenuList } from '@/api/menu'
+import { getUserMenuList } from '@/api/system/menu'
 import { constantRoutes } from '@/router/index'
 import Layout from '@/layout'
 

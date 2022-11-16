@@ -139,7 +139,7 @@
 
 <script>
 
-import { getMenuList, getTreeData, deleteMenuById, addMenu, editMenu } from '@/api/menu'
+import { getMenuList, getTreeData, deleteMenuById, addMenu, editMenu } from '@/api/system/menu'
 // 防止重复提交
 import debounce from 'lodash/debounce'
 
@@ -330,11 +330,6 @@ export default {
           } else {
             this.$message.error(res.msg)
           }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
         })
       })
     },
