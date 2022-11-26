@@ -1,0 +1,14 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+minio:
+  # minio服务所在地址
+  endpoint: http://192.168.111.201:9000
+  # 访问用户名
+  accessKey: minio
+  # 访问密码
+  secretKey: minio123456
+  # 存储桶的名称
+  bucketName: gulimall

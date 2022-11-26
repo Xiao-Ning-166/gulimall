@@ -2,8 +2,8 @@ package com.gulimall.product.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.utils.R;
 import com.gulimall.product.entity.CategoryEntity;
 import com.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

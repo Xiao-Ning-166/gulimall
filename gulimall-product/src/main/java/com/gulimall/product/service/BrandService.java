@@ -1,7 +1,8 @@
 package com.gulimall.product.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gulimall.common.utils.PageUtils;
+import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.entity.BrandEntity;
 
 import java.util.Map;
@@ -16,5 +17,14 @@ import java.util.Map;
 public interface BrandService extends IService<BrandEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 分页查询
+     *
+     * @param brandEntity
+     * @param page
+     * @return
+     */
+    IPage<BrandEntity> listPage(BrandEntity brandEntity, IPage<BrandEntity> page);
 }
 

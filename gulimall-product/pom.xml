@@ -21,10 +21,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- 谷粒商城-公共模块 -->
+        <!-- 谷粒商城-公共模块-核心模块 -->
         <dependency>
             <groupId>com.gulimall</groupId>
-            <artifactId>gulimall-common</artifactId>
+            <artifactId>gulimall-common-core</artifactId>
+        </dependency>
+
+        <!-- 谷粒商城-公共模块-数据库模块 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-common-database</artifactId>
         </dependency>
 
     </dependencies>

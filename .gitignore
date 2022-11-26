@@ -44,3 +44,5 @@ gen
 **/mvnw
 **/mvnw.cmd
 **/.mvn
+
+.gradle

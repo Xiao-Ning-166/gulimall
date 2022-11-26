@@ -24,6 +24,7 @@
         <module>gulimall-admin</module>
         <!-- 网关服务 -->
         <module>gulimall-gateway</module>
+        <module>gulimall-third-module</module>
     </modules>
 
     <properties>
@@ -38,8 +39,12 @@
         <spring.boot.version>2.6.3</spring.boot.version>
         <mybatis.plus.version>3.4.2</mybatis.plus.version>
         <commons.lang.version>3.12.0</commons.lang.version>
+        <minio.version>8.4.3</minio.version>
+        <okhttp.version>4.9.3</okhttp.version>
+        <hutool.version>5.8.5</hutool.version>
     </properties>
 
+    <!-- 依赖版本管理 -->
     <dependencyManagement>
         <dependencies>
             <!--springboot -->
@@ -76,10 +81,17 @@
                 <version>${mybatis.plus.version}</version>
             </dependency>
 
-            <!-- 谷粒商城-公共模块 -->
+            <!-- 谷粒商城-公共模块-核心模块 -->
             <dependency>
                 <groupId>com.gulimall</groupId>
-                <artifactId>gulimall-common</artifactId>
+                <artifactId>gulimall-common-core</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
+            <!-- 谷粒商城-公共模块-数据库配置模块 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-common-database</artifactId>
                 <version>${gulimall.version}</version>
             </dependency>
 
@@ -90,6 +102,25 @@
                 <version>${commons.lang.version}</version>
             </dependency>
 
+            <!-- minio对象存储 -->
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
+            <!-- hutool工具包 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>

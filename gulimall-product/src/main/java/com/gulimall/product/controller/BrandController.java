@@ -1,8 +1,10 @@
 package com.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gulimall.common.core.utils.R;
+import com.gulimall.product.entity.BrandEntity;
+import com.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.product.entity.BrandEntity;
-import com.gulimall.product.service.BrandService;
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 
 
@@ -31,13 +31,23 @@ public class BrandController {
     private BrandService brandService;
 
     /**
-     * 列表
+     * 分页查询
+     *
+     * @param brandEntity
+     * @param current
+     * @param size
+     * @param request
+     * @return
      */
     @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = brandService.queryPage(params);
+    public R list(BrandEntity brandEntity,
+                  @RequestParam(value = "current", defaultValue = "1") Integer current,
+                  @RequestParam(value = "size", defaultValue = "10") Integer size,
+                  HttpServletRequest request){
+        IPage<BrandEntity> page = new Page<>(current, size);
+        IPage<BrandEntity> brandPage = brandService.listPage(brandEntity, page);
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", page);
     }
 
 

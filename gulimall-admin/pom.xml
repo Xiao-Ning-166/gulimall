@@ -72,12 +72,8 @@
 		<!-- 谷粒商城-公共模块 -->
 		<dependency>
 			<groupId>com.gulimall</groupId>
-			<artifactId>gulimall-common</artifactId>
+			<artifactId>gulimall-common-core</artifactId>
 			<exclusions>
-				<exclusion>
-					<groupId>com.baomidou</groupId>
-					<artifactId>mybatis-plus-generator</artifactId>
-				</exclusion>
 				<exclusion>
 					<groupId>org.apache.commons</groupId>
 					<artifactId>commons-lang3</artifactId>
