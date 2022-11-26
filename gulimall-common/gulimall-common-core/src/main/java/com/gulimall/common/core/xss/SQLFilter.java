@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.gulimall.common.xss;
+package com.gulimall.common.core.xss;
 
 import org.apache.commons.lang3.StringUtils;
 

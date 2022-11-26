@@ -1,4 +1,4 @@
-package com.gulimall.common.xss;
+package com.gulimall.common.core.xss;
 
 import java.util.ArrayList;
 import java.util.Collections;
