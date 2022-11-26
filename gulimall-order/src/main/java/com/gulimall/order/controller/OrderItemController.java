@@ -1,7 +1,7 @@
 package com.gulimall.order.controller;
 
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.utils.R;
 import com.gulimall.order.entity.OrderItemEntity;
 import com.gulimall.order.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;

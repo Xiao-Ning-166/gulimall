@@ -1,7 +1,7 @@
 package com.gulimall.storage.controller;
 
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.utils.R;
 import com.gulimall.storage.entity.PurchaseEntity;
 import com.gulimall.storage.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;

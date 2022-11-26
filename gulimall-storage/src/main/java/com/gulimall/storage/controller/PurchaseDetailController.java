@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gulimall.storage.entity.PurchaseDetailEntity;
 import com.gulimall.storage.service.PurchaseDetailService;
-import com.gulimall.common.utils.PageUtils;
-import com.gulimall.common.utils.R;
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.utils.R;
 
 
 
 /**
- * 
+ *
  *
  * @author xiaoning
  * @email 475529787@qq.com
