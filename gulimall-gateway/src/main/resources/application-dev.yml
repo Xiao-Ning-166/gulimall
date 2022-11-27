@@ -3,7 +3,7 @@ spring:
     gateway:
       routes:
         # 商品服务
-        - id: product_router
+        - id: product_route
           # 匹配后提供服务的地址
           uri: lb://gulimall-product
           # 匹配规则
@@ -14,8 +14,20 @@ spring:
             # 路径重写 /api/** ==> /**
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
-        # 路由的id
-        - id: admin_router
+        # 第三方服务-oss服务
+        - id: third_oss_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-module-oss
+          # 匹配规则
+          predicates:
+            - Path=/api/third/oss/**
+          # 过滤器配置
+          filters:
+            # 路径重写 /api/** ==> /**
+            - RewritePath=/api/third/(?<segment>.*), /$\{segment}
+
+        # 后台管理服务
+        - id: admin_route
           # 匹配后提供服务的地址
           uri: lb://gulimall-admin
           # 匹配规则

@@ -6,6 +6,7 @@ import com.gulimall.common.core.utils.R;
 import com.gulimall.product.entity.BrandEntity;
 import com.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +66,7 @@ public class BrandController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand){
+    public R save(@Validated @RequestBody BrandEntity brand){
 		brandService.save(brand);
 
         return R.ok();

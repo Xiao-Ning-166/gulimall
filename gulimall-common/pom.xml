@@ -18,8 +18,6 @@
     <!-- 子模块 -->
     <modules>
         <module>gulimall-common-core</module>
-        <!-- 对象存储服务 -->
-        <module>gulimall-common-oos</module>
         <module>gulimall-common-database</module>
     </modules>
 
