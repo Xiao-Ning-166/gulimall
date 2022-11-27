@@ -1,6 +1,7 @@
 package com.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.gulimall.common.core.valid.Select;
 import lombok.Data;
@@ -69,5 +70,11 @@ public class BrandEntity implements Serializable {
 	@NotNull
 	@Min(value = 0, message = "序号必须大于等于0")
 	private Integer sort;
+
+	/**
+	 * 是否删除。0-未删除 1-已删除
+	 */
+	@TableLogic(value = "0", delval = "1")
+	private Integer isDelete;
 
 }

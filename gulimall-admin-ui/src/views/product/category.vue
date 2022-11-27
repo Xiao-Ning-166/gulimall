@@ -248,7 +248,7 @@ export default {
           }
           this.dataLoading = false
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.message)
         }
       })
     },
@@ -259,7 +259,7 @@ export default {
         if (res.code === 200) {
           this.$message.success('修改成功!')
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.message)
         }
       })
     },
@@ -284,7 +284,7 @@ export default {
               type: 'success'
             })
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.message)
           }
         })
       })
@@ -317,7 +317,7 @@ export default {
               type: 'success'
             })
           } else {
-            this.$message.error(res.msg)
+            this.$message.error(res.message)
           }
         })
       })
@@ -352,7 +352,7 @@ export default {
                 type: 'success'
               })
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.message)
             }
           })
         } else {
@@ -404,7 +404,7 @@ export default {
                 type: 'success'
               })
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.message)
             }
           })
         } else {
@@ -418,7 +418,7 @@ export default {
         if (res.code === 200) {
           this.selectTreeData = res.data
         } else {
-          this.$message.error(res.msg)
+          this.$message.error(res.message)
         }
       })
     },

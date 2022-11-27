@@ -11,6 +11,7 @@ import com.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -47,6 +48,16 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, BrandEntity> impl
         IPage<BrandEntity> brandPage = brandMapper.selectPage(page, queryWrapper);
 
         return brandPage;
+    }
+
+    /**
+     * 删除品牌
+     *
+     * @param ids id集合
+     */
+    @Override
+    public void removeBrandByIds(List<Long> ids) {
+        removeByIds(ids);
     }
 
 }

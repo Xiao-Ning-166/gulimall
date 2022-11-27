@@ -7,13 +7,16 @@ import com.gulimall.product.entity.BrandEntity;
 import com.gulimall.product.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotEmpty;
 import java.util.Arrays;
 
 
@@ -75,9 +78,19 @@ public class BrandController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
-    public R update(@RequestBody BrandEntity brand){
+    @PutMapping("/update")
+    public R update(@Validated @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @PutMapping("/status")
+    public R updateStatus(@RequestBody BrandEntity brand){
+        brandService.updateById(brand);
 
         return R.ok();
     }
@@ -85,9 +98,9 @@ public class BrandController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
-    public R delete(@RequestBody Long[] brandIds){
-		brandService.removeByIds(Arrays.asList(brandIds));
+    @DeleteMapping("/delete")
+    public R delete(@NotEmpty @RequestBody Long[] brandIds){
+		brandService.removeBrandByIds(Arrays.asList(brandIds));
 
         return R.ok();
     }

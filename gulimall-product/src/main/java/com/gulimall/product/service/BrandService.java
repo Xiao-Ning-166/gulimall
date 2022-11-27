@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.entity.BrandEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,5 +27,12 @@ public interface BrandService extends IService<BrandEntity> {
      * @return
      */
     IPage<BrandEntity> listPage(BrandEntity brandEntity, IPage<BrandEntity> page);
+
+    /**
+     * 删除品牌
+     *
+     * @param ids id集合
+     */
+    void removeBrandByIds(List<Long> ids);
 }
 
