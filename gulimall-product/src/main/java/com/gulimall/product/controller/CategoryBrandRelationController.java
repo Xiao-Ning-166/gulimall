@@ -1,19 +1,20 @@
 package com.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.utils.R;
+import com.gulimall.product.entity.CategoryBrandRelationEntity;
+import com.gulimall.product.service.CategoryBrandRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.product.entity.CategoryBrandRelationEntity;
-import com.gulimall.product.service.CategoryBrandRelationService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -52,7 +53,7 @@ public class CategoryBrandRelationController {
     }
 
     /**
-     * 保存
+     * 保存品牌分类关联信息
      */
     @RequestMapping("/save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
@@ -81,4 +82,15 @@ public class CategoryBrandRelationController {
         return R.ok();
     }
 
+    /**
+     * 查询品牌关联的分类集合
+     *
+     * @param brandId
+     * @return
+     */
+    @GetMapping("/category/{brandId}")
+    public R getRelationCategoryList(@PathVariable("brandId") Long brandId) {
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.getRelationCategoryList(brandId);
+        return R.ok().put("data", data);
+    }
 }

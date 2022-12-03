@@ -8,9 +8,17 @@
         <result property="id" column="id"/>
         <result property="brandId" column="brand_id"/>
         <result property="catelogId" column="catelog_id"/>
-        <result property="brandName" column="brand_name"/>
         <result property="catelogName" column="catelog_name"/>
     </resultMap>
 
+    <select id="getRelationCategoryList" resultType="com.gulimall.product.entity.CategoryBrandRelationEntity">
+        SELECT
+            t1.id, t1.catelog_id, t1.brand_id, t2.name AS catelogName
+        FROM
+            pms_category_brand_relation AS t1
+            LEFT JOIN pms_category AS t2 ON t1.catelog_id = t2.cat_id
+        WHERE
+            t1.brand_id = #{brandId}
+    </select>
 
 </mapper>

@@ -4,6 +4,8 @@ import com.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 品牌分类关联
  *
@@ -14,4 +16,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CategoryBrandRelationMapper extends BaseMapper<CategoryBrandRelationEntity> {
 
+    /**
+     * 查询品牌关联的分类列表
+     *
+     * @param brandId
+     * @return
+     */
+    List<CategoryBrandRelationEntity> getRelationCategoryList(Long brandId);
 }

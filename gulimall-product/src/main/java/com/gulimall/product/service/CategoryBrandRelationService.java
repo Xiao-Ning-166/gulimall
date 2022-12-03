@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.entity.CategoryBrandRelationEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,13 @@ import java.util.Map;
 public interface CategoryBrandRelationService extends IService<CategoryBrandRelationEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 查询品牌关联的分类列表
+     *
+     * @param brandId
+     * @return
+     */
+    List<CategoryBrandRelationEntity> getRelationCategoryList(Long brandId);
 }
 
