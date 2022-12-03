@@ -44,3 +44,29 @@ export function deleteById(ids) {
     data: ids
   })
 }
+
+// 得到品牌关联的分类列表
+export function getRelationCategoryList(brandId) {
+  return request({
+    url: `/product/categorybrandrelation/category/${brandId}`,
+    method: 'get'
+  })
+}
+
+// 保存品牌、分类关联关系
+export function saveBrandCategoryRelation(data) {
+  return request({
+    url: '/product/categorybrandrelation/save',
+    method: 'post',
+    data
+  })
+}
+
+// 删除关联关系
+export function removeRelation(ids) {
+  return request({
+    url: '/product/categorybrandrelation/delete',
+    method: 'delete',
+    data: ids
+  })
+}

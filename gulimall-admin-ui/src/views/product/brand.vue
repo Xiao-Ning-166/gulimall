@@ -77,6 +77,13 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button
+            icon="el-icon-connection"
+            size="mini"
+            type="primary"
+            title="关联分类"
+            @click="handleRelation(scope.row)"
+          />
+          <el-button
             icon="el-icon-edit"
             size="mini"
             title="编辑"
@@ -164,6 +171,41 @@
       </div>
     </el-dialog>
     <!-- 新增、编辑弹框 end -->
+
+    <!-- 关联分类弹框 begin -->
+    <el-dialog title="关联分类" :visible.sync="relationCategoryVisible" width="23%">
+      <el-popover
+        v-model="popoverVisible"
+        placement="right-end"
+        title="选择分类"
+        width="350"
+        trigger="click"
+      >
+        <category-cascader :category-id.sync="categoryRelationForm.catelogId" />
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
+          <el-button type="primary" size="mini" @click="handleSaveRelation">确定</el-button>
+        </div>
+        <el-button slot="reference">进行关联</el-button>
+      </el-popover>
+      <el-table :data="relationCategoryList">
+        <el-table-column type="index" label="序号" width="50" align="center" />
+        <!-- <el-table-column property="catelogId" label="分类id" width="100" /> -->
+        <el-table-column property="catelogName" label="分类名称" width="200" align="center" />
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button
+              icon="el-icon-delete-solid"
+              size="mini"
+              type="danger"
+              title="删除"
+              @click="handleRemoveRelation(scope.row)"
+            />
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+    <!-- 关联分类弹框 end -->
   </div>
 </template>
 
@@ -174,17 +216,22 @@ import {
   updateById,
   addBrand,
   updateStatusById,
-  deleteById
+  deleteById,
+  getRelationCategoryList,
+  saveBrandCategoryRelation,
+  removeRelation
 } from '@/api/product/brand.js'
 import { upload } from '@/utils/oss'
 // 防止重复提交
 import debounce from 'lodash/debounce'
 import Pagination from '@/components/Pagination'
+import CategoryCascader from '@/components/CategoryCascader'
 
 export default {
   name: 'Brand',
   components: {
-    Pagination
+    Pagination,
+    CategoryCascader
   },
   data() {
     return {
@@ -236,6 +283,13 @@ export default {
             trigger: 'blur'
           }
         ]
+      },
+      relationCategoryList: [],
+      relationCategoryVisible: false,
+      popoverVisible: false,
+      categoryRelationForm: {
+        brandId: undefined,
+        catelogId: undefined
       }
     }
   },
@@ -453,6 +507,57 @@ export default {
         }
       })
       console.log('_this.brandForm', _this.brandForm)
+    },
+    handleRelation(row) {
+      this.categoryRelationForm.brandId = row.brandId
+      this.getBrandCategoryList(row.brandId)
+    },
+    // 得到品牌关联的分类列表
+    getBrandCategoryList(brandId) {
+      // 查询当前品牌已经关联的分类列表
+      getRelationCategoryList(brandId).then((res) => {
+        if (res.code === 200) {
+          this.relationCategoryList = res.data
+          this.relationCategoryVisible = true
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    // 保存关系
+    handleSaveRelation() {
+      console.log('关系', this.categoryRelationForm)
+      // 保存关系
+      saveBrandCategoryRelation(this.categoryRelationForm).then((res) => {
+        if (res.code === 200) {
+          this.getBrandCategoryList(this.categoryRelationForm.brandId)
+          this.popoverVisible = false
+        } else {
+          res.$message.error(res.message)
+        }
+      })
+    },
+    // 删除关系
+    handleRemoveRelation(row) {
+      this.$confirm(`确定要解除和分类【${row.catelogName}】的关联吗？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const ids = [row.id]
+        // 删除操作
+        removeRelation(ids).then((res) => {
+          if (res.code === 200) {
+            // 重新加载数据
+            this.getBrandCategoryList(this.categoryRelationForm.brandId)
+            this.$notify({
+              title: '成功',
+              message: '关联解除成功!',
+              type: 'success'
+            })
+          }
+        })
+      })
     }
   }
 }
