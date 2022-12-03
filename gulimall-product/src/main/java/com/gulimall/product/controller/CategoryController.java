@@ -8,6 +8,7 @@ import com.gulimall.product.entity.CategoryEntity;
 import com.gulimall.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +63,18 @@ public class CategoryController {
         IPage<CategoryEntity> categoryPage = categoryService.listWithTree(categoryEntity, page);
 
         return R.ok().put("data", categoryPage);
+    }
+
+    /**
+     * 以树形结构返回商品类型列表（树形选择框）
+     *
+     * @return
+     */
+    @GetMapping("/tree")
+    public R listTree(){
+        List<CategoryEntity> categoryList = categoryService.listTree();
+
+        return R.ok().put("data", categoryList);
     }
 
     /**

@@ -41,5 +41,12 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @return
      */
     List<CategoryEntity> listSelectTree();
+
+    /**
+     * 以树形结构返回全部分类数据
+     *
+     * @return
+     */
+    List<CategoryEntity> listTree();
 }
 

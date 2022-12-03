@@ -1,19 +1,23 @@
 package com.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gulimall.common.core.utils.R;
+import com.gulimall.product.entity.AttrGroupEntity;
+import com.gulimall.product.service.AttrGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.product.entity.AttrGroupEntity;
-import com.gulimall.product.service.AttrGroupService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 
 
@@ -33,18 +37,22 @@ public class AttrGroupController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrGroupService.queryPage(params);
+    @GetMapping("/list")
+    public R list(AttrGroupEntity attrGroupEntity,
+                  @RequestParam(value = "current", defaultValue = "1") Integer current,
+                  @RequestParam(value = "size", defaultValue = "10") Integer size,
+                  HttpServletRequest request){
+        IPage<AttrGroupEntity> page = new Page<>(current, size);
+        IPage<AttrGroupEntity> attrGroupPage = attrGroupService.listPage(attrGroupEntity, page);
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", page);
     }
 
 
     /**
      * 信息
      */
-    @RequestMapping("/info/{attrGroupId}")
+    @GetMapping("/info/{attrGroupId}")
     public R info(@PathVariable("attrGroupId") Long attrGroupId){
 		AttrGroupEntity attrGroup = attrGroupService.getById(attrGroupId);
 
@@ -54,7 +62,7 @@ public class AttrGroupController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     public R save(@RequestBody AttrGroupEntity attrGroup){
 		attrGroupService.save(attrGroup);
 
@@ -64,7 +72,7 @@ public class AttrGroupController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/update")
     public R update(@RequestBody AttrGroupEntity attrGroup){
 		attrGroupService.updateById(attrGroup);
 
@@ -74,7 +82,7 @@ public class AttrGroupController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/delete")
     public R delete(@RequestBody Long[] attrGroupIds){
 		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
 

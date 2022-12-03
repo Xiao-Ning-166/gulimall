@@ -137,4 +137,29 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
         return topCategoryList;
     }
 
+    /**
+     * 以树形结构返回全部分类数据
+     *
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> listTree() {
+        // 1、查询全部分类数据
+        List<CategoryEntity> allCategoryList = query().list();
+
+        // 2、组装树形数据
+        List<CategoryEntity> topCategoryList = allCategoryList.stream().filter((category) -> {
+            return category.getParentCid() == 0;
+        }).map((category) -> {
+            // 查找所有子分类
+            category.setChildren(getChildren(category, allCategoryList));
+            return category;
+        }).sorted((category1, category2) -> {
+            // 分类进行排序
+            return (category1.getSort() == null ? 0 : category1.getSort()) - (category2.getSort() == null ? 0 : category2.getSort());
+        }).collect(Collectors.toList());
+
+        return topCategoryList;
+    }
+
 }
