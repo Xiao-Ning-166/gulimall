@@ -87,7 +87,7 @@
             @click="handleEdit(scope.row)"
           />
           <el-button
-            v-show="scope.row.children.length === 0"
+            v-show="!scope.row.children || scope.row.children.length === 0"
             icon="el-icon-delete-solid"
             size="mini"
             type="danger"
@@ -99,15 +99,16 @@
     </el-table>
 
     <!-- 分页条 -->
-    <el-pagination
+    <!-- <el-pagination
       :current-page="pagination.current"
-      :page-sizes="pagination.pageSizes"
+      :page-sizes.sync="pagination.pageSizes"
       :page-size="pagination.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="pagination.total"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    />
+    /> -->
+    <pagination :pagination="pagination" @loadData="loadData" />
 
     <!-- 新增、编辑弹框 begin -->
     <el-dialog :title="categoryFormTitle" :visible.sync="categoryFormVisible">
@@ -179,9 +180,13 @@ import {
 } from '@/api/product/category.js'
 // 防止重复提交
 import debounce from 'lodash/debounce'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'ProductManage',
+  components: {
+    Pagination
+  },
   data() {
     return {
       // 数据加载动画
@@ -198,6 +203,7 @@ export default {
         pageSizes: [10, 20, 30],
         // 每页大小
         size: 10,
+        layout: 'total, sizes, prev, pager, next, jumper',
         // 总记录数
         total: 20
       },
@@ -241,11 +247,9 @@ export default {
       getCategoryList(params).then((res) => {
         if (res.code === 200) {
           this.categoryList = res.data.records
-          this.pagination = {
-            current: res.data.current,
-            size: res.data.size,
-            total: res.data.total
-          }
+          this.$set(this.pagination, 'current', res.data.current)
+          this.$set(this.pagination, 'size', res.data.size)
+          this.$set(this.pagination, 'total', res.data.total)
           this.dataLoading = false
         } else {
           this.$message.error(res.message)

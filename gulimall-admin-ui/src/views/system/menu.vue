@@ -168,6 +168,8 @@ export default {
       },
       // 菜单表单
       menuForm: {
+        name: '',
+        type: 1,
         parentId: '0',
         parentName: '一级菜单'
       },

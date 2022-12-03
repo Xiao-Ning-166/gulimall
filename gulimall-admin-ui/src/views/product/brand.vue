@@ -94,7 +94,7 @@
     </el-table>
 
     <!-- 分页条 -->
-    <el-pagination
+    <!-- <el-pagination
       :current-page="pagination.current"
       :page-sizes="pagination.pageSizes"
       :page-size="pagination.size"
@@ -102,7 +102,8 @@
       :total="pagination.total"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-    />
+    /> -->
+    <pagination :pagination="pagination" @loadData="loadData" />
 
     <!-- 新增、编辑弹框 begin -->
     <el-dialog :title="brandFormTitle" :visible.sync="brandFormVisible">
@@ -178,9 +179,13 @@ import {
 import { upload } from '@/utils/oss'
 // 防止重复提交
 import debounce from 'lodash/debounce'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'Brand',
+  components: {
+    Pagination
+  },
   data() {
     return {
       // 表格数据
@@ -197,6 +202,7 @@ export default {
         pageSizes: [10, 20, 30],
         // 每页大小
         size: 10,
+        layout: 'total, sizes, prev, pager, next, jumper',
         // 总记录数
         total: 20
       },
@@ -250,11 +256,11 @@ export default {
       getBrandList(params).then((res) => {
         if (res.code === 200) {
           this.brandData = res.data.records
-          this.pagination = {
-            current: res.data.current,
-            size: res.data.size,
-            total: res.data.total
-          }
+          // 更新分页条信息
+          this.$set(this.pagination, 'current', res.data.current)
+          this.$set(this.pagination, 'size', res.data.size)
+          this.$set(this.pagination, 'total', res.data.total)
+
           this.dataLoading = false
         } else {
           this.$message.error(res.message)
@@ -411,18 +417,18 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    // 每页记录数改变时触发
-    handleSizeChange(size) {
-      this.pagination.size = size
-      // 重新加载数据
-      this.loadData()
-    },
-    // 页码改变时触发
-    handleCurrentChange(current) {
-      this.pagination.current = current
-      // 重新加载数据
-      this.loadData()
-    },
+    // // 每页记录数改变时触发
+    // handleSizeChange(size) {
+    //   this.pagination.size = size
+    //   // 重新加载数据
+    //   this.loadData()
+    // },
+    // // 页码改变时触发
+    // handleCurrentChange(current) {
+    //   this.pagination.current = current
+    //   // 重新加载数据
+    //   this.loadData()
+    // },
     // 上传文件之前调用
     beforeUpload(file) {
       const isPicture = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'

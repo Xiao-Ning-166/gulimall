@@ -43,3 +43,11 @@ export function getSelectTreeData() {
     method: 'get'
   })
 }
+
+// 得到全部分类树形数据
+export function getCategoryTreeData() {
+  return request({
+    url: '/product/category/tree',
+    method: 'get'
+  })
+}
