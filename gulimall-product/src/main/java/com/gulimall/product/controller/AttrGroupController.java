@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
-
+import java.util.List;
 
 
 /**
@@ -46,6 +46,18 @@ public class AttrGroupController {
         IPage<AttrGroupEntity> attrGroupPage = attrGroupService.listPage(attrGroupEntity, page);
 
         return R.ok().put("data", page);
+    }
+
+    /**
+     * 根据分类id查询所属属性分组列表
+     *
+     * @param catelogId
+     * @return
+     */
+    @GetMapping("/list/{catelogId}")
+    public R list(@PathVariable("catelogId") Long catelogId) {
+        List<AttrGroupEntity> attrGroupList = attrGroupService.listByCatelogId(catelogId);
+        return R.ok().put("data", attrGroupList);
     }
 
 

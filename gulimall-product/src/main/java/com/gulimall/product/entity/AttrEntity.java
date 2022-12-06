@@ -2,14 +2,13 @@ package com.gulimall.product.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
-import lombok.Data;
 
 /**
  * 商品属性
- * 
+ *
  * @author xiaoning
  * @email 475529787@qq.com
  * @date 2022-10-23 19:07:59
@@ -40,6 +39,10 @@ public class AttrEntity implements Serializable {
 	 * 可选值列表[用逗号分隔]
 	 */
 	private String valueSelect;
+	/**
+	 * 是否多选【0-单选；1-多选】
+	 */
+	private Integer isMultiple;
 	/**
 	 * 属性类型[0-销售属性，1-基本属性，2-既是销售属性又是基本属性]
 	 */

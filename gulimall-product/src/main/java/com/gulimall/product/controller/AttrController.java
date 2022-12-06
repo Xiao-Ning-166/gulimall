@@ -1,19 +1,25 @@
 package com.gulimall.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gulimall.common.core.utils.R;
+import com.gulimall.product.entity.AttrEntity;
+import com.gulimall.product.service.AttrService;
+import com.gulimall.product.vo.AttributeResponseVO;
+import com.gulimall.product.vo.AttributeVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.product.entity.AttrEntity;
-import com.gulimall.product.service.AttrService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 
 
@@ -33,11 +39,15 @@ public class AttrController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = attrService.queryPage(params);
+    @GetMapping("/list")
+    public R list(AttrEntity attrEntity,
+                  @RequestParam(value = "current", defaultValue = "1") Integer current,
+                  @RequestParam(value = "size", defaultValue = "10") Integer size,
+                  HttpServletRequest request){
+        IPage<AttrEntity> page = new Page<>(current, size);
+        IPage<AttributeResponseVO> attrPage = attrService.listPage(attrEntity, page);
 
-        return R.ok().put("page", page);
+        return R.ok().put("data", attrPage);
     }
 
 
@@ -55,8 +65,8 @@ public class AttrController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody AttrEntity attr){
-		attrService.save(attr);
+    public R save(@Validated @RequestBody AttributeVO attr){
+		attrService.saveAttribute(attr);
 
         return R.ok();
     }
@@ -64,9 +74,9 @@ public class AttrController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
-    public R update(@RequestBody AttrEntity attr){
-		attrService.updateById(attr);
+    @PutMapping("/update")
+    public R update(@Validated @RequestBody AttributeVO attr){
+		attrService.updateAttributeById(attr);
 
         return R.ok();
     }
@@ -74,9 +84,9 @@ public class AttrController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/delete")
     public R delete(@RequestBody Long[] attrIds){
-		attrService.removeByIds(Arrays.asList(attrIds));
+		attrService.removeAttributeByIds(Arrays.asList(attrIds));
 
         return R.ok();
     }

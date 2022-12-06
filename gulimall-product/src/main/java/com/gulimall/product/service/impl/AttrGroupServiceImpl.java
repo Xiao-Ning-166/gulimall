@@ -11,6 +11,7 @@ import com.gulimall.product.service.AttrGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -42,6 +43,18 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
         QueryWrapper<AttrGroupEntity> queryWrapper = new QueryWrapper<>(attrGroupEntity);
         IPage<AttrGroupEntity> attrGroupPage = attrGroupMapper.selectPage(page, queryWrapper);
         return attrGroupPage;
+    }
+
+    /**
+     * 根据分类id查询分类所属属性分组列表
+     *
+     * @param catelogId 分类id
+     * @return
+     */
+    @Override
+    public List<AttrGroupEntity> listByCatelogId(Long catelogId) {
+        List<AttrGroupEntity> attrGroupList = query().eq("catelog_id", catelogId).list();
+        return attrGroupList;
     }
 
 }
