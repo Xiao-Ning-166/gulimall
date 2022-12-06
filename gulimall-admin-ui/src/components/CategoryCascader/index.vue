@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-cascader
-      v-model="catelogId"
+      v-model="categoryId"
       :options="categoryData"
       :props="cascaderProps"
       clearable
@@ -19,14 +19,14 @@ export default {
   name: 'CategoryCascader',
   description: '分类级联选择',
   props: {
-    categoryId: {
+    catelogId: {
       type: Number,
       default: 0
     }
   },
   data() {
     return {
-      catelogId: undefined,
+      categoryId: this.catelogId,
       categoryData: [],
       cascaderProps: {
         emitPath: false,
@@ -35,7 +35,14 @@ export default {
       }
     }
   },
+  watch: {
+    catelogId(newCatelogId, oldCatelogId) {
+      console.log('分类变化', newCatelogId, this.categoryData)
+      this.categoryId = newCatelogId
+    }
+  },
   created() {
+    console.log('父组件传值', this.catelogId)
     // 加载数据
     this.loadData()
   },
@@ -52,8 +59,8 @@ export default {
     },
     // 选中结点改变事件
     handleChange(data) {
-      console.log('结点变化', data)
-      this.$emit('update:categoryId', data)
+      console.log('结点变化', data, this.catelogId)
+      this.$emit('update:catelogId', data)
     }
   }
 }

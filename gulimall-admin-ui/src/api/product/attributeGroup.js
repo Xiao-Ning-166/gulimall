@@ -35,3 +35,11 @@ export function updateById(data) {
     data
   })
 }
+
+// 根据分类id获取所属分组列表
+export function getAttrGroups(catelogId) {
+  return request({
+    url: `/product/attrgroup/list/${catelogId}`,
+    method: 'get'
+  })
+}
