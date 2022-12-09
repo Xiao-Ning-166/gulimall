@@ -58,7 +58,7 @@ public class AttributeVO implements Serializable {
     /**
      * 所属分组id
      */
-    @NotNull(message = "请选择所属分组")
+    // @NotNull(message = "请选择所属分组")
     private List<Long> attrGroupIds;
     /**
      * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整

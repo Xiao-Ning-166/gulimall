@@ -64,7 +64,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="categoryName" label="所属分类" width="100" align="center" />
-        <el-table-column prop="attrGroupName" label="所属分组" width="100" align="center" />
         <el-table-column label="可检索" width="70" align="center">
           <template slot-scope="scope">
             <i v-if="scope.row.searchType" class="el-icon-success" />
@@ -147,16 +146,6 @@
           <el-form-item label="所属分类" prop="catelogId">
             <category-cascader :catelog-id.sync="attrForm.catelogId" />
           </el-form-item>
-          <el-form-item label="所属分组" prop="attrGroupIds">
-            <el-select v-model="attrForm.attrGroupIds" multiple style="width: 400px">
-              <el-option
-                v-for="item in attrGroupList"
-                :key="item.attrGroupId"
-                :label="item.attrGroupName"
-                :value="item.attrGroupId"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item label="是否可检索">
             <el-switch
               v-model="attrForm.searchType"
@@ -214,8 +203,8 @@ import {
 } from '@/api/product/attribute'
 
 export default {
-  name: 'SpecificationParam',
-  description: '规格参数',
+  name: 'SaleAttribute',
+  description: '销售属性',
   components: {
     CategoryTree,
     CategoryCascader,
@@ -225,7 +214,7 @@ export default {
     return {
       // 查询参数
       queryForm: {
-        attrType: 1
+        attrType: 0
       },
       attrData: [],
       // 加载
@@ -252,40 +241,11 @@ export default {
       rules: {
         attrName: [{ required: true, message: '请输入分组名称', trigger: 'change' }],
         catelogId: [{ required: true, message: '请选择所属分类', trigger: 'change' }],
-        attrGroupIds: [
-          {
-            validator: (rule, value, callback) => {
-              if (this.attrForm['catelogId'] === '') {
-                console.log('this.attrForm.catelogId', this.attrForm['catelogId'])
-                callback(new Error('请请先选择所属分类!'))
-              } else {
-                callback()
-              }
-            },
-            trigger: 'focus'
-          },
-          // { required: true, message: '请选择所属分组', trigger: 'change' }
-        ]
       },
       attrForm: {
-        attrType: 1
+        attrType: 0
       },
       attrGroupList: []
-    }
-  },
-  watch: {
-    'attrForm.catelogId'(newCatelogId, oldCatelogId) {
-      console.log('catelogId变化', newCatelogId, oldCatelogId)
-      if (newCatelogId !== undefined) {
-        // 查询分类下的属性分组列表
-        getAttrGroups(newCatelogId).then((res) => {
-          if (res.code === 200) {
-            this.attrGroupList = res.data
-          } else {
-            this.$message.error(res.message)
-          }
-        })
-      }
     }
   },
   created() {
@@ -333,6 +293,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           // 处理参数
+          console.log(this.attrForm['valueSelect'])
           if (this.attrForm['valueSelect'] !== undefined) {
             this.$set(this.attrForm, 'valueSelect', this.attrForm['valueSelect'].join(','))
           }
@@ -462,7 +423,7 @@ export default {
     // 搜索框重置
     handleReset() {
       this.queryForm = {
-        attrType: 1
+        attrType: 0
       }
       this.loadData(1)
     },

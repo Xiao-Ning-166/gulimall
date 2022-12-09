@@ -104,6 +104,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity> impleme
         // 2、保存属性、属性组关联关系
         List<AttrAttrgroupRelationEntity> attrAttrgroupRelationList = new ArrayList<>();
         List<Long> attrGroupIds = attr.getAttrGroupIds();
+        if (CollectionUtil.isEmpty(attrGroupIds)) {
+            return;
+        }
         for (Long attrGroupId : attrGroupIds) {
             AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
             attrAttrgroupRelationEntity.setAttrGroupId(attrGroupId);
