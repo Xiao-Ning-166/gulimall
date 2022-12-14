@@ -4,7 +4,9 @@ import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.common.core.utils.R;
 import com.gulimall.product.entity.AttrAttrgroupRelationEntity;
 import com.gulimall.product.service.AttrAttrgroupRelationService;
+import com.gulimall.product.vo.AttrAttrgroupRelationVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +63,16 @@ public class AttrAttrgroupRelationController {
     }
 
     /**
+     * 批量保存
+     */
+    @RequestMapping("/save/relation")
+    public R save(@Validated @RequestBody AttrAttrgroupRelationVO attrAttrgroupRelationVO){
+        attrAttrgroupRelationService.saveRelation(attrAttrgroupRelationVO);
+
+        return R.ok();
+    }
+
+    /**
      * 修改
      */
     @RequestMapping("/update")
@@ -76,6 +88,16 @@ public class AttrAttrgroupRelationController {
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] ids){
 		attrAttrgroupRelationService.removeByIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete/{attrGroupId}")
+    public R deleteRelation(@PathVariable("attrGroupId") Long attrGroupId, @RequestBody Long[] ids){
+        attrAttrgroupRelationService.deleteRelation(attrGroupId, Arrays.asList(ids));
 
         return R.ok();
     }

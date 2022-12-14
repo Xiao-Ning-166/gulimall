@@ -3,7 +3,9 @@ package com.gulimall.product.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gulimall.common.core.utils.R;
+import com.gulimall.product.entity.AttrEntity;
 import com.gulimall.product.entity.AttrGroupEntity;
+import com.gulimall.product.service.AttrAttrgroupRelationService;
 import com.gulimall.product.service.AttrGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +36,9 @@ import java.util.List;
 public class AttrGroupController {
     @Autowired
     private AttrGroupService attrGroupService;
+
+    @Autowired
+    private AttrAttrgroupRelationService relationService;
 
     /**
      * 列表
@@ -99,6 +105,42 @@ public class AttrGroupController {
 		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
 
         return R.ok();
+    }
+
+    /**
+     * 根据分组id查询关联的属性列表
+     *
+     * @param attrGroupId
+     * @param current
+     * @param size
+     * @return
+     */
+    @GetMapping("/attrs/attrgroup/{attrGroupId}")
+    public R getAttrsByAttrGroupId(@NotBlank @PathVariable("attrGroupId") Long attrGroupId,
+                                   @RequestParam(value = "current", defaultValue = "1") Integer current,
+                                   @RequestParam(value = "size", defaultValue = "10") Integer size){
+        IPage page =  new Page<>(current, size);
+        IPage<AttrEntity> data = relationService.getAttrsByAttributeId(page, attrGroupId);
+
+        return R.ok().put("data", data);
+    }
+
+    /**
+     * 查询当前分类下没有绑定分组的属性
+     *
+     * @param catelogId 分类id
+     * @param current
+     * @param size
+     * @return
+     */
+    @GetMapping("/attrs/category/{catelogId}")
+    public R getAttrsNoAttrGroup(@NotBlank @PathVariable("catelogId") Long catelogId,
+                                   @RequestParam(value = "current", defaultValue = "1") Integer current,
+                                   @RequestParam(value = "size", defaultValue = "10") Integer size){
+        IPage page =  new Page<>(current, size);
+        IPage<AttrEntity> data = relationService.getAttrsNoAttrGroup(page, catelogId);
+
+        return R.ok().put("data", data);
     }
 
 }

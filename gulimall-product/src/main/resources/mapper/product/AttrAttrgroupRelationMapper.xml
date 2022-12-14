@@ -23,4 +23,37 @@
             t1.attr_id = #{attrId}
     </select>
 
+    <select id="getAttrsByAttributeId" resultType="com.gulimall.product.entity.AttrEntity">
+        SELECT
+            t1.*
+        FROM
+            pms_attr AS t1
+            LEFT JOIN pms_attr_attrgroup_relation AS t2 ON t1.attr_id = t2.attr_id
+        WHERE
+            t1.attr_type = 1 AND t2.attr_group_id = #{attrGroupId}
+    </select>
+
+    <select id="getAttrsNoAttrGroup" resultType="com.gulimall.product.entity.AttrEntity">
+        SELECT
+            t1.*
+        FROM
+            pms_attr AS t1
+            LEFT JOIN pms_attr_attrgroup_relation AS t2 ON t1.attr_id = t2.attr_id
+        WHERE
+            t1.attr_type = 1 AND t1.catelog_id = #{catelogId} AND t2.id IS NULL
+    </select>
+
+    <delete id="deleteRelation">
+        DELETE
+        FROM
+            pms_attr_attrgroup_relation
+        WHERE
+            attr_group_id = #{attrGroupId}
+            AND
+            attr_id IN
+            <foreach collection="attrIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </delete>
+
 </mapper>
