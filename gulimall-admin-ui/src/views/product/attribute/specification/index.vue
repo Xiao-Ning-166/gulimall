@@ -57,7 +57,7 @@
         <el-table-column type="index" label="序号" width="50" fixed="left" align="center" />
         <el-table-column prop="attrName" label="参数名称" width="100" align="center" />
         <el-table-column prop="valueSelect" label="可选值列表" width="300" align="center" />
-        <el-table-column prop="isMultiple" label="值类型" width="80" align="center" >
+        <el-table-column prop="isMultiple" label="值类型" width="80" align="center">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.isMultiple == 1">多选</el-tag>
             <el-tag v-else type="warning">单选</el-tag>

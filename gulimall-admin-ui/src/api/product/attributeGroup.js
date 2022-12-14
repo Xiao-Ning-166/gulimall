@@ -43,3 +43,39 @@ export function getAttrGroups(catelogId) {
     method: 'get'
   })
 }
+
+// 根据属性分组id获取对应属性列表
+export function getAttrsByAttrGroupId(params) {
+  return request({
+    url: `/product/attrgroup/attrs/attrgroup/${params.attrGroupId}`,
+    method: 'get',
+    params: { current: params.current, size: params.size }
+  })
+}
+
+// 查询当前分类下没有绑定分组的属性
+export function getAttrsNoAttrGroup(params) {
+  return request({
+    url: `/product/attrgroup/attrs/category/${params.catelogId}`,
+    method: 'get',
+    params: { current: params.current, size: params.size }
+  })
+}
+
+// 批量保存属性、属性分组关系
+export function saveRelationBatch(data) {
+  return request({
+    url: '/product/attrattrgrouprelation/save/relation',
+    method: 'post',
+    data
+  })
+}
+
+// 批量解除属性、属性分组的关联
+export function deleteBatchById(data) {
+  return request({
+    url: `/product/attrattrgrouprelation/delete/${data.attrGroupId}`,
+    method: 'delete',
+    data: data.attrIds
+  })
+}

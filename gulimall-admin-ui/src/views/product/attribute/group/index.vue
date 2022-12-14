@@ -62,6 +62,12 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button
+              icon="el-icon-connection"
+              size="mini"
+              title="关联规格参数"
+              @click="handleRelation(scope.row)"
+            />
+            <el-button
               icon="el-icon-edit"
               size="mini"
               title="编辑"
@@ -127,6 +133,12 @@
         </div>
       </el-dialog>
       <!-- 新增、编辑弹框 end -->
+
+      <attr-drawer
+        ref="attrDrawer"
+        :attr-drawer-visible.sync="relationAttrDrawerVisible"
+        :attr-group="attrGroup"
+      />
     </el-col>
   </el-row>
 </template>
@@ -134,6 +146,7 @@
 <script>
 import CategoryTree from '@/components/CategoryTree/index.vue'
 import Pagination from '@/components/Pagination'
+import AttrDrawer from './AttrDrawer.vue'
 // 防止重复提交
 import debounce from 'lodash/debounce'
 import { getCategoryTreeData } from '@/api/product/category'
@@ -149,7 +162,8 @@ export default {
   description: '属性分组',
   components: {
     CategoryTree,
-    Pagination
+    Pagination,
+    AttrDrawer
   },
   data() {
     return {
@@ -196,7 +210,9 @@ export default {
         emitPath: false,
         label: 'name',
         value: 'catId'
-      }
+      },
+      relationAttrDrawerVisible: false,
+      attrGroup: undefined
     }
   },
   created() {
@@ -392,6 +408,11 @@ export default {
     dialogClose() {
       // 重置表单
       this.resetForm('dataForm')
+    },
+    handleRelation(row) {
+      this.attrGroup = row
+      this.relationAttrDrawerVisible = true
+      this.$refs.attrDrawer.loadData(row.attrGroupId)
     }
   }
 }
