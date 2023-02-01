@@ -1,21 +1,13 @@
-/**
- * Copyright (c) 2016-2019 人人开源 All rights reserved.
- *
- * https://www.renren.io
- *
- * 版权所有，侵权必究！
- */
+package com.gulimall.order.config;
 
-package com.gulimall.admin.config;
-
-import io.swagger.annotations.Api;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -32,54 +24,34 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * swagger配置类
+ *
+ * @author xiaoning
+ * @date 2023/01/29
+ */
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig implements WebMvcConfigurer {
-
-    // @Bean
-    // public Docket createRestApi() {
-    //     return new Docket(DocumentationType.SWAGGER_2)
-    //         .apiInfo(apiInfo())
-    //         .select()
-    //         //加了ApiOperation注解的类，才生成接口文档
-    //         .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-    //         //包下的类，才生成接口文档
-    //         //.apis(RequestHandlerSelectors.basePackage("io.renren.controller"))
-    //         .paths(PathSelectors.any())
-    //         .build()
-    //         .securitySchemes(security());
-    // }
-    //
-    // private ApiInfo apiInfo() {
-    //     return new ApiInfoBuilder()
-    //         .title("人人开源")
-    //         .description("renren-fast文档")
-    //         .termsOfServiceUrl("https://www.renren.io")
-    //         .version("3.0.0")
-    //         .build();
-    // }
-    //
-    // private List<ApiKey> security() {
-    //     return newArrayList(
-    //         new ApiKey("X-Token", "X-Token", "header")
-    //     );
-    // }
+@EnableKnife4j
+public class SwaggerConfig extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket baseRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                // 配置扫描带有@Api注解的
-                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                // 配置了api文件也就是controller包的路径，否则生成的文档无法成功扫描接口
+                .apis(RequestHandlerSelectors.basePackage("com.gulimall.order.controller"))
                 .paths(PathSelectors.any())
                 .build();
+
+        return docket;
     }
 
     @Bean
     public ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("谷粒商城接口文档")
-                .description("谷粒商城后台接口文档 —— 后台管理模块")
+                .description("谷粒商城后台接口文档 —— 订单模块")
                 .termsOfServiceUrl("")
                 .contact(new Contact("xxx有限公司", "", ""))
                 .version("1.0")
@@ -132,5 +104,4 @@ public class SwaggerConfig implements WebMvcConfigurer {
             }
         };
     }
-
 }

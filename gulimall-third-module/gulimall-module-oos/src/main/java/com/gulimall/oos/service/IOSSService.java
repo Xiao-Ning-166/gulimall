@@ -1,6 +1,6 @@
 package com.gulimall.oos.service;
 
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

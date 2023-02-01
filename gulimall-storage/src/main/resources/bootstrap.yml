@@ -1,5 +1,7 @@
 server:
-  port: 9000
+  port: 8300
+  servlet:
+    context-path: /storage
 
 spring:
   application:

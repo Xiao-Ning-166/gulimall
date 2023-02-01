@@ -1,7 +1,9 @@
 package com.gulimall.oos.controller;
 
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.oos.service.IOSSService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/oss")
+@Api(tags = "Minio对象存储接口")
 public class OSSController {
 
     @Autowired
@@ -33,6 +36,7 @@ public class OSSController {
      * @return
      */
     @GetMapping("/presigned/{fileName}")
+    @ApiOperation(value = "获取预签名URL", notes = "获取预签名URL", response = R.class)
     public R getPresignedUrl(@PathVariable("fileName") String fileName) {
         return minioService.getPresignedUrl(bucketName, fileName);
     }
@@ -44,6 +48,7 @@ public class OSSController {
      * @return
      */
     @PostMapping("/upload")
+    @ApiOperation(value = "上传文件", notes = "上传文件", response = R.class)
     public R upload(MultipartFile file, HttpServletRequest request) {
         return minioService.upload(bucketName, file);
     }

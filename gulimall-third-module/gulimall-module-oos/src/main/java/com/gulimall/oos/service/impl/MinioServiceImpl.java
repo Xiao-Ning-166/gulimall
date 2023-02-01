@@ -1,6 +1,6 @@
 package com.gulimall.oos.service.impl;
 
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.oos.service.IOSSService;
 import com.gulimall.oos.utils.FileUtils;
 import com.gulimall.oos.utils.MinioUtils;

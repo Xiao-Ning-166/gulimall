@@ -1,7 +1,7 @@
 package com.gulimall.common.core.exception;
 
-import com.gulimall.common.core.constants.ErrorCodeEnum;
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.constants.ResponseCodeEnum;
+import com.gulimall.common.core.vo.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,7 +35,7 @@ public class GulimallExceptionHandler {
         bindingResult.getFieldErrors().forEach((fieldError) -> {
             data.put(fieldError.getField(), fieldError.getDefaultMessage());
         });
-        return R.error(ErrorCodeEnum.USER_ERROR_10400.getCode(), ErrorCodeEnum.USER_ERROR_10400.getMessage()).put("data", data);
+        return R.error(ResponseCodeEnum.USER_ERROR_10400.getCode(), ResponseCodeEnum.USER_ERROR_10400.getMessage(), data);
     }
 
 
@@ -48,7 +48,7 @@ public class GulimallExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public R handleException(Exception e) {
         log.error("发生异常，原因：{}", e.getMessage(), e);
-        return R.error(ErrorCodeEnum.SERVER_ERROR_20500.getCode(), ErrorCodeEnum.SERVER_ERROR_20500.getMessage());
+        return R.error(ResponseCodeEnum.INTERNAL_SERVER_ERROR_500);
     }
 
 }

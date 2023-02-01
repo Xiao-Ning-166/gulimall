@@ -1,5 +1,7 @@
 server:
-  port: 6000
+  port: 8100
+  servlet:
+    context-path: /member
 
 spring:
   application:
@@ -14,6 +16,7 @@ spring:
       server-addr: 127.0.0.1:8848
       # nacos作为服务注册中心的相关配置
       discovery:
+        group: GULI_GROUP
       # nacos作为服务配置中心的相关配置
       config:
         # 配置文件的格式
