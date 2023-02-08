@@ -10,8 +10,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gulimall-common-database</artifactId>
+    <description>谷粒商城-公共模块-数据库连接相关代码</description>
+    <packaging>jar</packaging>
 
     <dependencies>
+        <!-- 谷粒商城-公共模块-核心模块 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-common-core</artifactId>
+        </dependency>
+
         <!-- mysql连接驱动 -->
         <dependency>
             <groupId>mysql</groupId>

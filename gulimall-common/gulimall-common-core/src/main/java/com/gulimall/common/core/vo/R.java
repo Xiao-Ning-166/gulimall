@@ -62,7 +62,7 @@ public class R<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> R<T> ok() {
+    public static <T> R<T> success() {
         R<T> result = new R<T>();
         result.setCode(ResponseCodeEnum.RESPONSE_OK.getCode());
         result.setMessage(ResponseCodeEnum.RESPONSE_OK.getMessage());
@@ -76,7 +76,7 @@ public class R<T> implements Serializable {
      * @param <T>
      * @return
      */
-    public static <T> R<T> ok(String message) {
+    public static <T> R<T> success(String message) {
         R<T> result = new R<T>();
         result.setCode(ResponseCodeEnum.RESPONSE_OK.getCode());
         result.setMessage(message);

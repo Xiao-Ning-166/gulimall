@@ -11,12 +11,19 @@
 
     <artifactId>gulimall-common-core</artifactId>
     <description>谷粒商城-公共模块-核心模块</description>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- SpringCloud Openfeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- bootstrap 启动器 解决SpringBoot2.4版本后 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
 
         <!-- nacos作为服务注册中心 -->

@@ -29,9 +29,8 @@
 
     <properties>
         <gulimall.version>1.0</gulimall.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.encoding>UTF-8</project.encoding>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 
         <!-- 核心依赖 -->
         <spring.boot.version>2.6.3</spring.boot.version>
@@ -48,6 +47,7 @@
         <hutool.version>5.8.5</hutool.version>
         <!-- swagger增强依赖 -->
         <knife4j.version>3.0.3</knife4j.version>
+        <spring.javaformat.version>0.0.22</spring.javaformat.version>
     </properties>
 
     <!-- 依赖版本管理 -->
