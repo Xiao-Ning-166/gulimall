@@ -1,7 +1,7 @@
 package com.gulimall.storage.controller;
 
 import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.storage.entity.PurchaseEntity;
 import com.gulimall.storage.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2022-10-24 21:41:55
  */
 @RestController
-@RequestMapping("storage/purchase")
+@RequestMapping("/purchase")
 public class PurchaseController {
     @Autowired
     private PurchaseService purchaseService;
@@ -37,7 +37,7 @@ public class PurchaseController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = purchaseService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -49,7 +49,7 @@ public class PurchaseController {
     public R info(@PathVariable("id") Long id){
 		PurchaseEntity purchase = purchaseService.getById(id);
 
-        return R.ok().put("purchase", purchase);
+        return R.ok(purchase);
     }
 
     /**
@@ -60,7 +60,7 @@ public class PurchaseController {
     public R save(@RequestBody PurchaseEntity purchase){
 		purchaseService.save(purchase);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -71,7 +71,7 @@ public class PurchaseController {
     public R update(@RequestBody PurchaseEntity purchase){
 		purchaseService.updateById(purchase);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -82,7 +82,7 @@ public class PurchaseController {
     public R delete(@RequestBody Long[] ids){
 		purchaseService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

@@ -70,3 +70,11 @@ export function removeRelation(ids) {
     data: ids
   })
 }
+
+// 删除关联关系
+export function getBrandsByCategory(categoryId) {
+  return request({
+    url: `/product/categorybrandrelation/brand/${categoryId}`,
+    method: 'get'
+  })
+}

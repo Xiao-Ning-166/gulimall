@@ -1,19 +1,13 @@
-/**
- * Copyright (c) 2016-2019 人人开源 All rights reserved.
- *
- * https://www.renren.io
- *
- * 版权所有，侵权必究！
- */
-
 package com.gulimall.admin.modules.sys.controller;
 
+import com.gulimall.admin.common.utils.R;
 import com.gulimall.admin.modules.sys.entity.SysUserEntity;
+import com.gulimall.admin.modules.sys.form.SysLoginForm;
 import com.gulimall.admin.modules.sys.service.SysCaptchaService;
 import com.gulimall.admin.modules.sys.service.SysUserService;
 import com.gulimall.admin.modules.sys.service.SysUserTokenService;
-import com.gulimall.admin.common.utils.R;
-import com.gulimall.admin.modules.sys.form.SysLoginForm;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +29,7 @@ import java.util.Map;
  * @author Mark sunlightcs@gmail.com
  */
 @RestController
+@Api(tags = "登录接口")
 public class SysLoginController extends AbstractController {
 	@Autowired
 	private SysUserService sysUserService;
@@ -47,6 +42,7 @@ public class SysLoginController extends AbstractController {
 	 * 验证码
 	 */
 	@GetMapping("captcha")
+	@ApiOperation(value = "输出验证码", notes = "输出验证码")
 	public void captcha(HttpServletResponse response, String uuid)throws IOException {
 		response.setHeader("Cache-Control", "no-store, no-cache");
 		response.setContentType("image/jpeg");
@@ -92,6 +88,7 @@ public class SysLoginController extends AbstractController {
 	 * 退出
 	 */
 	@PostMapping("/sys/logout")
+	@ApiOperation(value = "退出登录", notes = "退出登录")
 	public R logout() {
 		sysUserTokenService.logout(getUserId());
 		return R.ok();

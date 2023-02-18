@@ -1,8 +1,9 @@
 package com.gulimall.storage.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.vo.R;
+import com.gulimall.storage.entity.WareOrderTaskEntity;
+import com.gulimall.storage.service.WareOrderTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.storage.entity.WareOrderTaskEntity;
-import com.gulimall.storage.service.WareOrderTaskService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -25,7 +24,7 @@ import com.gulimall.common.core.utils.R;
  * @date 2022-10-24 21:41:55
  */
 @RestController
-@RequestMapping("storage/wareordertask")
+@RequestMapping("/wareordertask")
 public class WareOrderTaskController {
     @Autowired
     private WareOrderTaskService wareOrderTaskService;
@@ -38,7 +37,7 @@ public class WareOrderTaskController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = wareOrderTaskService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -50,7 +49,7 @@ public class WareOrderTaskController {
     public R info(@PathVariable("id") Long id){
 		WareOrderTaskEntity wareOrderTask = wareOrderTaskService.getById(id);
 
-        return R.ok().put("wareOrderTask", wareOrderTask);
+        return R.ok(wareOrderTask);
     }
 
     /**
@@ -61,7 +60,7 @@ public class WareOrderTaskController {
     public R save(@RequestBody WareOrderTaskEntity wareOrderTask){
 		wareOrderTaskService.save(wareOrderTask);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -72,7 +71,7 @@ public class WareOrderTaskController {
     public R update(@RequestBody WareOrderTaskEntity wareOrderTask){
 		wareOrderTaskService.updateById(wareOrderTask);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -83,7 +82,7 @@ public class WareOrderTaskController {
     public R delete(@RequestBody Long[] ids){
 		wareOrderTaskService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

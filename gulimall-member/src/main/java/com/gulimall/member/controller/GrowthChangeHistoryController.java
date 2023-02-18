@@ -1,9 +1,10 @@
 package com.gulimall.member.controller;
 
 import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.member.entity.GrowthChangeHistoryEntity;
 import com.gulimall.member.service.GrowthChangeHistoryService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,8 @@ import java.util.Map;
  * @date 2022-10-24 20:27:59
  */
 @RestController
-@RequestMapping("member/growthchangehistory")
+@RequestMapping("/growthchangehistory")
+@Api(tags = "成长值变化历史记录接口")
 public class GrowthChangeHistoryController {
     @Autowired
     private GrowthChangeHistoryService growthChangeHistoryService;
@@ -37,7 +39,7 @@ public class GrowthChangeHistoryController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = growthChangeHistoryService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -49,7 +51,7 @@ public class GrowthChangeHistoryController {
     public R info(@PathVariable("id") Long id){
 		GrowthChangeHistoryEntity growthChangeHistory = growthChangeHistoryService.getById(id);
 
-        return R.ok().put("growthChangeHistory", growthChangeHistory);
+        return R.ok(growthChangeHistory);
     }
 
     /**
@@ -60,7 +62,7 @@ public class GrowthChangeHistoryController {
     public R save(@RequestBody GrowthChangeHistoryEntity growthChangeHistory){
 		growthChangeHistoryService.save(growthChangeHistory);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -71,7 +73,7 @@ public class GrowthChangeHistoryController {
     public R update(@RequestBody GrowthChangeHistoryEntity growthChangeHistory){
 		growthChangeHistoryService.updateById(growthChangeHistory);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -82,7 +84,7 @@ public class GrowthChangeHistoryController {
     public R delete(@RequestBody Long[] ids){
 		growthChangeHistoryService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

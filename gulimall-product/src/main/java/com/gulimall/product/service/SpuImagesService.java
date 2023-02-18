@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.entity.SpuImagesEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,13 @@ import java.util.Map;
 public interface SpuImagesService extends IService<SpuImagesEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 批量保存spu图片信息
+     *
+     * @param spuImages spu图片url地址集合
+     * @param spuId
+     */
+    void saveSpuImagesBatch(List<String> spuImages, Long spuId);
 }
 

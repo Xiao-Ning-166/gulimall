@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.common.core.utils.Query;
+import com.gulimall.product.entity.BrandEntity;
 import com.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.gulimall.product.mapper.CategoryBrandRelationMapper;
 import com.gulimall.product.service.CategoryBrandRelationService;
@@ -40,6 +41,17 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public List<CategoryBrandRelationEntity> getRelationCategoryList(Long brandId) {
         return categoryBrandRelationMapper.getRelationCategoryList(brandId);
+    }
+
+    /**
+     * 得到分类下的品牌集合
+     *
+     * @param categoryId 分类id
+     * @return
+     */
+    @Override
+    public List<BrandEntity> getBrandsByCategory(Long categoryId) {
+        return categoryBrandRelationMapper.getBrandsByCategory(categoryId);
     }
 
 }

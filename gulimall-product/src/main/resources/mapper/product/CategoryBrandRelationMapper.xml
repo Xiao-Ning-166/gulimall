@@ -21,4 +21,18 @@
             t1.brand_id = #{brandId}
     </select>
 
+
+    <select id="getBrandsByCategory" resultType="com.gulimall.product.entity.BrandEntity">
+        SELECT
+            t1.*
+        FROM
+            pms_brand AS t1
+            LEFT JOIN pms_category_brand_relation AS t2 ON t1.brand_id = t2.brand_id
+        <where>
+            <if test="categoryId != 0 and categoryId != null">
+                t2.catelog_id = #{categoryId}
+            </if>
+        </where>
+    </select>
+
 </mapper>

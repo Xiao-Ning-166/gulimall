@@ -1,5 +1,6 @@
 package com.gulimall.member.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.member.entity.MemberLevelEntity;
@@ -16,5 +17,14 @@ import java.util.Map;
 public interface MemberLevelService extends IService<MemberLevelEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 分页查询
+     *
+     * @param memberLevelEntity 查询条件
+     * @param page              分页参数
+     * @return
+     */
+    IPage<MemberLevelEntity> listPage(MemberLevelEntity memberLevelEntity, IPage<MemberLevelEntity> page);
 }
 

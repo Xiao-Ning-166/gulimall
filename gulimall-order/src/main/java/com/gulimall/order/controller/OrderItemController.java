@@ -1,7 +1,7 @@
 package com.gulimall.order.controller;
 
 import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.order.entity.OrderItemEntity;
 import com.gulimall.order.service.OrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2022-10-24 20:04:43
  */
 @RestController
-@RequestMapping("order/orderitem")
+@RequestMapping("/orderitem")
 public class OrderItemController {
     @Autowired
     private OrderItemService orderItemService;
@@ -36,7 +36,7 @@ public class OrderItemController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = orderItemService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -47,7 +47,7 @@ public class OrderItemController {
     public R info(@PathVariable("id") Long id){
 		OrderItemEntity orderItem = orderItemService.getById(id);
 
-        return R.ok().put("orderItem", orderItem);
+        return R.ok(orderItem);
     }
 
     /**
@@ -57,7 +57,7 @@ public class OrderItemController {
     public R save(@RequestBody OrderItemEntity orderItem){
 		orderItemService.save(orderItem);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -67,7 +67,7 @@ public class OrderItemController {
     public R update(@RequestBody OrderItemEntity orderItem){
 		orderItemService.updateById(orderItem);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -77,7 +77,7 @@ public class OrderItemController {
     public R delete(@RequestBody Long[] ids){
 		orderItemService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

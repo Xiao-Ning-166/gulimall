@@ -1,8 +1,9 @@
 package com.gulimall.storage.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.vo.R;
+import com.gulimall.storage.entity.WareSkuEntity;
+import com.gulimall.storage.service.WareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.storage.entity.WareSkuEntity;
-import com.gulimall.storage.service.WareSkuService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -25,7 +24,7 @@ import com.gulimall.common.core.utils.R;
  * @date 2022-10-24 21:41:55
  */
 @RestController
-@RequestMapping("storage/waresku")
+@RequestMapping("/waresku")
 public class WareSkuController {
     @Autowired
     private WareSkuService wareSkuService;
@@ -38,7 +37,7 @@ public class WareSkuController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = wareSkuService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -50,7 +49,7 @@ public class WareSkuController {
     public R info(@PathVariable("id") Long id){
 		WareSkuEntity wareSku = wareSkuService.getById(id);
 
-        return R.ok().put("wareSku", wareSku);
+        return R.ok(wareSku);
     }
 
     /**
@@ -61,7 +60,7 @@ public class WareSkuController {
     public R save(@RequestBody WareSkuEntity wareSku){
 		wareSkuService.save(wareSku);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -72,7 +71,7 @@ public class WareSkuController {
     public R update(@RequestBody WareSkuEntity wareSku){
 		wareSkuService.updateById(wareSku);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -83,7 +82,7 @@ public class WareSkuController {
     public R delete(@RequestBody Long[] ids){
 		wareSkuService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

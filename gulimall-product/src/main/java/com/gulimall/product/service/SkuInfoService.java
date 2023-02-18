@@ -1,10 +1,14 @@
 package com.gulimall.product.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.product.dto.SkuQueryDTO;
+import com.gulimall.product.dto.SpuSkuDTO;
 import com.gulimall.product.entity.SkuInfoEntity;
+import com.gulimall.product.entity.SpuInfoEntity;
+import com.gulimall.product.vo.SkuInfoVO;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * sku信息
@@ -15,6 +19,21 @@ import java.util.Map;
  */
 public interface SkuInfoService extends IService<SkuInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+    /**
+     * 批量保存sku信息
+     *
+     * @param skus          sku集合
+     * @param spuInfoEntity spu信息
+     */
+    void saveSkus(List<SpuSkuDTO> skus, SpuInfoEntity spuInfoEntity);
+
+    /**
+     * 分页查询sku信息
+     *
+     * @param skuQueryDTO 查询条件
+     * @param page        分页参数
+     * @return
+     */
+    IPage<SkuInfoVO> queryPage(SkuQueryDTO skuQueryDTO, IPage<SkuInfoVO> page);
 }
 

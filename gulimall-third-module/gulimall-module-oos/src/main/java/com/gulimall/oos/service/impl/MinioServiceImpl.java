@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,9 +63,7 @@ public class MinioServiceImpl implements IOSSService {
             // 4、获取预签名URL
             String presignedObjectUrl = minioClient.getPresignedObjectUrl(getPresignedObjectUrlArgs);
             // 5、返回预签名URL
-            Map<String, Object> result = new HashMap<>();
-            result.put("data", presignedObjectUrl);
-            return R.ok(result);
+            return R.ok(presignedObjectUrl);
         } catch (Exception e) {
             log.error("获取预签名异常，原因：{}", e, e.getMessage());
             e.printStackTrace();
@@ -87,9 +83,7 @@ public class MinioServiceImpl implements IOSSService {
 
         try {
             String accessUrl = minioUtils.upload(bucketName, file, FileUtils.renameFile(file));
-            Map<String, Object> result = new HashMap<>();
-            result.put("data", accessUrl);
-            return R.ok(result);
+            return R.ok(accessUrl);
         } catch (Exception e) {
             log.error("文件上传失败，原因：{}", e, e.getMessage());
             e.printStackTrace();

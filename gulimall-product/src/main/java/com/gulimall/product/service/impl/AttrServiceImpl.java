@@ -16,6 +16,7 @@ import com.gulimall.product.mapper.AttrMapper;
 import com.gulimall.product.service.AttrAttrgroupRelationService;
 import com.gulimall.product.service.AttrService;
 import com.gulimall.product.service.CategoryService;
+import com.gulimall.product.constant.ProductEnum;
 import com.gulimall.product.vo.AttributeResponseVO;
 import com.gulimall.product.vo.AttributeVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,6 +165,33 @@ public class AttrServiceImpl extends ServiceImpl<AttrMapper, AttrEntity> impleme
         QueryWrapper<AttrAttrgroupRelationEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.in("attr_id", ids);
         attrAttrgroupRelationService.remove(queryWrapper);
+    }
+
+    /**
+     * 查询分类下全部销售属性数据
+     *
+     * @param catalogId 分类id
+     * @return
+     */
+    @Override
+    public List<AttributeVO> listSaleAttributes(Long catalogId) {
+        // 1、查询分类下的所有销售属性数据
+        List<AttrEntity> saleAttributes = this.query()
+                .eq("attr_type", ProductEnum.attrType.SALE.getValue())
+                .eq("catelog_id", catalogId)
+                .list();
+
+        // 2、封装数据为响应对象
+        List<AttributeVO> saleAttributesList = saleAttributes.stream().map((attrEntity) -> {
+            AttributeVO attributeVO = new AttributeVO();
+            // 拷贝属性
+            BeanUtil.copyProperties(attrEntity, attributeVO);
+
+            return attributeVO;
+        }).collect(Collectors.toList());
+
+        // 3、返回结果
+        return saleAttributesList;
     }
 
 }

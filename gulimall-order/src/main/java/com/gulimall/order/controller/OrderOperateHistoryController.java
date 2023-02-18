@@ -1,7 +1,7 @@
 package com.gulimall.order.controller;
 
 import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.order.entity.OrderOperateHistoryEntity;
 import com.gulimall.order.service.OrderOperateHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Map;
  * @date 2022-10-24 20:04:43
  */
 @RestController
-@RequestMapping("order/orderoperatehistory")
+@RequestMapping("/orderoperatehistory")
 public class OrderOperateHistoryController {
     @Autowired
     private OrderOperateHistoryService orderOperateHistoryService;
@@ -36,7 +36,7 @@ public class OrderOperateHistoryController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = orderOperateHistoryService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -48,7 +48,7 @@ public class OrderOperateHistoryController {
     public R info(@PathVariable("id") Long id){
 		OrderOperateHistoryEntity orderOperateHistory = orderOperateHistoryService.getById(id);
 
-        return R.ok().put("orderOperateHistory", orderOperateHistory);
+        return R.ok(orderOperateHistory);
     }
 
     /**
@@ -59,7 +59,7 @@ public class OrderOperateHistoryController {
     public R save(@RequestBody OrderOperateHistoryEntity orderOperateHistory){
 		orderOperateHistoryService.save(orderOperateHistory);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -70,7 +70,7 @@ public class OrderOperateHistoryController {
     public R update(@RequestBody OrderOperateHistoryEntity orderOperateHistory){
 		orderOperateHistoryService.updateById(orderOperateHistory);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -81,7 +81,7 @@ public class OrderOperateHistoryController {
     public R delete(@RequestBody Long[] ids){
 		orderOperateHistoryService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

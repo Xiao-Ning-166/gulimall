@@ -1,8 +1,9 @@
 package com.gulimall.order.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.vo.R;
+import com.gulimall.order.entity.OrderSettingEntity;
+import com.gulimall.order.service.OrderSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.order.entity.OrderSettingEntity;
-import com.gulimall.order.service.OrderSettingService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -25,7 +24,7 @@ import com.gulimall.common.core.utils.R;
  * @date 2022-10-24 20:04:43
  */
 @RestController
-@RequestMapping("order/ordersetting")
+@RequestMapping("/ordersetting")
 public class OrderSettingController {
     @Autowired
     private OrderSettingService orderSettingService;
@@ -38,7 +37,7 @@ public class OrderSettingController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = orderSettingService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -50,7 +49,7 @@ public class OrderSettingController {
     public R info(@PathVariable("id") Long id){
 		OrderSettingEntity orderSetting = orderSettingService.getById(id);
 
-        return R.ok().put("orderSetting", orderSetting);
+        return R.ok(orderSetting);
     }
 
     /**
@@ -61,7 +60,7 @@ public class OrderSettingController {
     public R save(@RequestBody OrderSettingEntity orderSetting){
 		orderSettingService.save(orderSetting);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -72,7 +71,7 @@ public class OrderSettingController {
     public R update(@RequestBody OrderSettingEntity orderSetting){
 		orderSettingService.updateById(orderSetting);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -83,7 +82,7 @@ public class OrderSettingController {
     public R delete(@RequestBody Long[] ids){
 		orderSettingService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

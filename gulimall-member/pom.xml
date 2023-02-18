@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.gulimall</groupId>
-    <artifactId>member</artifactId>
+    <artifactId>gulimall-member</artifactId>
     <version>1.0</version>
 
     <name>gulimall-member</name>

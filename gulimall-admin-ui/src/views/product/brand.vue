@@ -181,7 +181,7 @@
         width="350"
         trigger="click"
       >
-        <category-cascader :category-id.sync="categoryRelationForm.catelogId" />
+        <category-cascader :catelog-id.sync="categoryRelationForm.catelogId" />
         <div style="text-align: right; margin: 0">
           <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
           <el-button type="primary" size="mini" @click="handleSaveRelation">确定</el-button>
@@ -289,7 +289,7 @@ export default {
       popoverVisible: false,
       categoryRelationForm: {
         brandId: undefined,
-        catelogId: undefined
+        catelogId: 0
       }
     }
   },

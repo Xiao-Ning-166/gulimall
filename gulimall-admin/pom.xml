@@ -12,7 +12,7 @@
 	<groupId>com.gulimall</groupId>
 	<artifactId>admin</artifactId>
 	<version>1.0</version>
-    <packaging>pom</packaging>
+    <!--<packaging>pom</packaging>-->
 
     <name>gulimall-admin</name>
 	<description>谷粒商城-后台管理服务</description>

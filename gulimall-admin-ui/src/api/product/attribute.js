@@ -35,3 +35,12 @@ export function deleteById(ids) {
     data: ids
   })
 }
+
+// 查询分类下的所有销售属性
+export function searchSaleAttributes(catalogId) {
+  return request({
+    url: `/product/attr/sales/${catalogId}`,
+    method: 'get'
+  })
+}
+

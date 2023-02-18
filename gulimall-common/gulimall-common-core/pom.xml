@@ -20,6 +20,12 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <!-- 负载均衡 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-loadbalancer</artifactId>
+        </dependency>
+
         <!-- bootstrap 启动器 解决SpringBoot2.4版本后 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -1,8 +1,9 @@
 package com.gulimall.coupon.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gulimall.coupon.service.CouponSpuRelationService;
+import com.gulimall.coupon.entity.CouponSpuRelationEntity;
 import com.gulimall.coupon.mapper.CouponSpuRelationMapper;
+import com.gulimall.coupon.service.CouponSpuRelationService;
 import org.springframework.stereotype.Service;
 
 /**

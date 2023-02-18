@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 @Data
 @TableName(value ="sms_sku_full_reduction")
 public class SkuFullReductionEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
@@ -37,6 +40,4 @@ public class SkuFullReductionEntity implements Serializable {
      * 是否参与其他优惠
      */
     private Integer addOther;
-
-    private static final long serialVersionUID = 1L;
 }

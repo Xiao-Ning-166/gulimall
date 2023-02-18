@@ -79,3 +79,12 @@ export function deleteBatchById(data) {
     data: data.attrIds
   })
 }
+
+// 得到分类下的所有属性分组和属性集合
+export function getAttrGroupsWithAttr(catelogId) {
+  return request({
+    url: '/product/attrgroup/attrs',
+    method: 'get',
+    params: { catelogId: catelogId }
+  })
+}

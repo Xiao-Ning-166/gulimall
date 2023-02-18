@@ -8,6 +8,7 @@ import com.gulimall.common.core.utils.Query;
 import com.gulimall.product.entity.AttrGroupEntity;
 import com.gulimall.product.mapper.AttrGroupMapper;
 import com.gulimall.product.service.AttrGroupService;
+import com.gulimall.product.vo.AttrGroupResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,17 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
     public List<AttrGroupEntity> listByCatelogId(Long catelogId) {
         List<AttrGroupEntity> attrGroupList = query().eq("catelog_id", catelogId).list();
         return attrGroupList;
+    }
+
+    /**
+     * 查询分类下的所有属性分组和属性分组下的属性列表
+     *
+     * @param catelogId 分类id
+     * @return
+     */
+    @Override
+    public List<AttrGroupResponseVO> listAttrGroupWithAttr(Long catelogId) {
+        return attrGroupMapper.listAttrGroupWithAttr(catelogId);
     }
 
 }

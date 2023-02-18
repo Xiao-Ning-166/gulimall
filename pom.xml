@@ -9,7 +9,7 @@
 
     <name>gulimall</name>
     <description>谷粒商城-顶级服务</description>
-
+    <!-- 打出来的可以作为其他项目的maven依赖，在工程A中添加工程B的pom，A就可以使用B中的类。用在父级工程或聚合工程中。用来做jar包的版本控制。 -->
     <packaging>pom</packaging>
 
     <!--引入子服务 -->
@@ -25,6 +25,8 @@
         <!-- 网关服务 -->
         <module>gulimall-gateway</module>
         <module>gulimall-third-module</module>
+        <module>gulimall-coupon</module>
+        <module>gulimall-api</module>
     </modules>
 
     <properties>
@@ -103,6 +105,13 @@
                 <version>${gulimall.version}</version>
             </dependency>
 
+            <!-- 谷粒商城-优惠服务-对内接口 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-api-coupon</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
             <!-- commons-lang3 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -157,12 +166,87 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- bootstrap 启动器 解决SpringBoot2.4版本后 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
     </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <pluginManagement>
+            <plugins>
+                <!--
+                Spring Boot的Maven插件（Spring Boot Maven plugin）能够以Maven的方式为应用提供Spring Boot的支持，
+                    即为Spring Boot应用提供了执行Maven操作的可能。
+                Spring Boot Maven plugin能够将Spring Boot应用打包为可执行的jar或war文件，然后以通常的方式运行Spring Boot应用。
+
+                Spring Boot Maven plugin的最主要goal就是repackage，其在Maven的package生命周期阶段，
+                    能够将mvn package生成的软件包，再次打包为可执行的软件包，并将mvn package生成的软件包重命名为*.original。
+                -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!--
+                应用包装和空白约定的源格式器
+                一个Checkstyle插件，可在整个代码库中实现一致性
+            -->
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>${spring.javaformat.version}</version>
+            </plugin>
+            <!-- 指定maven编译的jdk版本，如果不指定，maven3默认用jdk1.5 maven2默认用jdk1.3 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!--使用 mvn clean package -Pprod 进行激活prod环境的配置，否则激活默认环境-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+                <!--https://github.com/alibaba/nacos/issues/3460  默认的命名空间不要去设置namespace -->
+                <nacos.namespace />
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+                <nacos.namespace>x</nacos.namespace>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <nacos.namespace>x</nacos.namespace>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

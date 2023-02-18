@@ -50,5 +50,13 @@ public interface AttrService extends IService<AttrEntity> {
      * @param ids
      */
     void removeAttributeByIds(List<Long> ids);
+
+    /**
+     * 查询分类下全部销售属性数据
+     *
+     * @param catalogId 分类id
+     * @return
+     */
+    List<AttributeVO> listSaleAttributes(Long catalogId);
 }
 

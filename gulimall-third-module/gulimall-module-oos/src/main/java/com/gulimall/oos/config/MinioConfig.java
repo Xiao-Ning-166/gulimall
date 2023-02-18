@@ -24,7 +24,9 @@ public class MinioConfig {
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
+                // minio服务地址
                 .endpoint(this.minioProperties.getEndpoint())
+                // minio账号密码
                 .credentials(this.minioProperties.getAccessKey(), this.minioProperties.getSecretKey())
                 .build();
     }

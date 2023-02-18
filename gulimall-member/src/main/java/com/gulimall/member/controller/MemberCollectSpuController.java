@@ -1,8 +1,9 @@
 package com.gulimall.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.common.core.vo.R;
+import com.gulimall.member.entity.MemberCollectSpuEntity;
+import com.gulimall.member.service.MemberCollectSpuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gulimall.member.entity.MemberCollectSpuEntity;
-import com.gulimall.member.service.MemberCollectSpuService;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.R;
+import java.util.Arrays;
+import java.util.Map;
 
 
 
@@ -25,7 +24,7 @@ import com.gulimall.common.core.utils.R;
  * @date 2022-10-24 20:27:59
  */
 @RestController
-@RequestMapping("member/membercollectspu")
+@RequestMapping("/membercollectspu")
 public class MemberCollectSpuController {
     @Autowired
     private MemberCollectSpuService memberCollectSpuService;
@@ -38,7 +37,7 @@ public class MemberCollectSpuController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = memberCollectSpuService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -50,7 +49,7 @@ public class MemberCollectSpuController {
     public R info(@PathVariable("id") Long id){
 		MemberCollectSpuEntity memberCollectSpu = memberCollectSpuService.getById(id);
 
-        return R.ok().put("memberCollectSpu", memberCollectSpu);
+        return R.ok(memberCollectSpu);
     }
 
     /**
@@ -61,7 +60,7 @@ public class MemberCollectSpuController {
     public R save(@RequestBody MemberCollectSpuEntity memberCollectSpu){
 		memberCollectSpuService.save(memberCollectSpu);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -72,7 +71,7 @@ public class MemberCollectSpuController {
     public R update(@RequestBody MemberCollectSpuEntity memberCollectSpu){
 		memberCollectSpuService.updateById(memberCollectSpu);
 
-        return R.ok();
+        return R.success();
     }
 
     /**
@@ -83,7 +82,7 @@ public class MemberCollectSpuController {
     public R delete(@RequestBody Long[] ids){
 		memberCollectSpuService.removeByIds(Arrays.asList(ids));
 
-        return R.ok();
+        return R.success();
     }
 
 }

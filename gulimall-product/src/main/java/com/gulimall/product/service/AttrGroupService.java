@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.entity.AttrGroupEntity;
+import com.gulimall.product.vo.AttrGroupResponseVO;
 
 import java.util.List;
 import java.util.Map;
@@ -35,5 +36,13 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @return
      */
     List<AttrGroupEntity> listByCatelogId(Long catelogId);
+
+    /**
+     * 查询分类下的所有属性分组和属性分组下的属性列表
+     *
+     * @param catelogId 分类id
+     * @return
+     */
+    List<AttrGroupResponseVO> listAttrGroupWithAttr(Long catelogId);
 }
 
