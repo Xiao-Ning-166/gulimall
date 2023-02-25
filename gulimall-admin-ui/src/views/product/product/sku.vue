@@ -67,7 +67,7 @@
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-form label-position="left"  class="demo-table-expand">
+          <el-form label-position="left" class="demo-table-expand">
             <el-form-item label="商品标题">
               <span>{{ props.row.skuTitle }}</span>
             </el-form-item>
