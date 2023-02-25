@@ -88,6 +88,12 @@
             @click="handleRelation(scope.row)"
           />
           <el-button
+            icon="el-icon-cpu"
+            size="mini"
+            title="规格"
+            @click="handleAttr(scope.row)"
+          />
+          <el-button
             icon="el-icon-delete-solid"
             size="mini"
             type="danger"
@@ -161,40 +167,59 @@
     </el-dialog>
     <!-- 新增、编辑弹框 end -->
 
-    <!-- 关联分类弹框 begin -->
-    <el-dialog title="关联分类" :visible.sync="relationCategoryVisible" width="23%">
-      <el-popover
-        v-model="popoverVisible"
-        placement="right-end"
-        title="选择分类"
-        width="350"
-        trigger="click"
-      >
-        <category-cascader :catelog-id.sync="categoryRelationForm.catelogId" />
-        <div style="text-align: right; margin: 0">
-          <el-button size="mini" type="text" @click="popoverVisible = false">取消</el-button>
-          <el-button type="primary" size="mini" @click="handleSaveRelation">确定</el-button>
-        </div>
-        <el-button slot="reference">进行关联</el-button>
-      </el-popover>
-      <el-table :data="relationCategoryList">
-        <el-table-column type="index" label="序号" width="50" align="center" />
-        <!-- <el-table-column property="catelogId" label="分类id" width="100" /> -->
-        <el-table-column property="catelogName" label="分类名称" width="200" align="center" />
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button
-              icon="el-icon-delete-solid"
-              size="mini"
-              type="danger"
-              title="删除"
-              @click="handleRemoveRelation(scope.row)"
-            />
-          </template>
-        </el-table-column>
-      </el-table>
+    <el-dialog :title="attrTitle" :visible.sync="attrVisible">
+      <el-tabs tab-position="left" style="width:98%">
+        <el-tab-pane
+          v-for="(group,gidx) in dataResp.attrGroups"
+          :key="group.attrGroupId"
+          :label="group.attrGroupName"
+        >
+          <!-- 遍历属性,每个tab-pane对应一个表单，每个属性是一个表单项  spu.baseAttrs[0] = [{attrId:xx,val:}]-->
+          <el-form ref="form" :model="dataResp">
+            <el-form-item
+              v-for="(attr,aidx) in group.attrs"
+              :key="attr.attrId"
+              :label="attr.attrName"
+            >
+              <el-input
+                v-show="false"
+                v-model="dataResp.baseAttrs[gidx][aidx].attrId"
+                type="hidden"
+              />
+              <el-select
+                v-model="dataResp.baseAttrs[gidx][aidx].attrValues"
+                :multiple="attr.isMultiple === 1"
+                filterable
+                allow-create
+                default-first-option
+                placeholder="请选择或输入值"
+              >
+                <el-option
+                  v-for="(val,vidx) in attr.valueSelect.split(',')"
+                  :key="vidx"
+                  :label="val"
+                  :value="val"
+                />
+              </el-select>
+              <el-checkbox
+                v-model="dataResp.baseAttrs[gidx][aidx].showDesc"
+                :true-label="1"
+                :false-label="0"
+              >快速展示</el-checkbox>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="attrVisible = false">
+          关闭
+        </el-button>
+        <el-button type="primary" @click="handleAttrOk()">
+          确认
+        </el-button>
+      </div>
     </el-dialog>
-    <!-- 关联分类弹框 end -->
+
   </div>
 </template>
 
@@ -203,6 +228,8 @@
 import {
   getSpuList
 } from '@/api/product/spu.js'
+import { getAttrGroupsWithAttr } from '@/api/product/attributeGroup'
+import { getAttrValuesBySpuId, updateAttrValuesBySpuId } from '@/api/product/productAttrValue'
 import { upload } from '@/utils/oss'
 // 防止重复提交
 import debounce from 'lodash/debounce'
@@ -274,7 +301,17 @@ export default {
       categoryRelationForm: {
         brandId: undefined,
         catelogId: 0
-      }
+      },
+      attrTitle: '规格维护',
+      attrVisible: false,
+      spuId: '',
+      catalogId: '',
+      dataResp: {
+        // 后台返回的所有数据
+        attrGroups: [],
+        baseAttrs: []
+      },
+      spuAttrsMap: {}
     }
   },
   created() {
@@ -321,67 +358,6 @@ export default {
       this.brandFormTitle = '新增'
       this.brandFormVisible = true
     },
-    // 新增确认
-    createData: debounce(function() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          // 新增
-          addBrand(this.brandForm).then((res) => {
-            if (res.code === 200) {
-              this.brandFormVisible = false
-              // 重新加载数据
-              this.loadData()
-              this.$notify({
-                title: '成功',
-                message: '品牌添加成功!',
-                type: 'success'
-              })
-            } else {
-              this.$message.error(res.message)
-            }
-          })
-        } else {
-          return false
-        }
-      })
-    }, 1000, { 'leading': true, 'trailing': false }),
-    // 修改
-    handleEdit(row) {
-      console.log('row', row)
-      // 重置表单
-      this.resetForm('dataForm')
-      this.brandForm = { ...row }
-      console.log('brandForm', this.brandForm)
-      this.brandFormTitle = '编辑'
-      this.brandFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    // 修改确认
-    updateData: debounce(function() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          // 修改
-          updateById(this.brandForm).then((res) => {
-            if (res.code === 200) {
-              this.brandFormVisible = false
-              // 重新加载数据
-              this.loadData()
-              this.$notify({
-                title: '成功',
-                message: '品牌信息修改成功!',
-                type: 'success'
-              })
-            } else {
-              this.$message.error(res.message)
-            }
-          })
-        } else {
-          return false
-        }
-      })
-    }, 1000, { 'leading': true, 'trailing': false }),
     // 删除
     handleDelete(row) {
       this.$confirm(`确定要删除品牌【${row.name}】吗？`, '提示', {
@@ -431,6 +407,103 @@ export default {
         }
       })
     },
+    // 获取规格信息
+    handleAttr(row) {
+      console.log('fdsfds', row)
+      this.attrVisible = true
+      this.spuId = row.id
+      this.catalogId = row.catalogId
+      this.clearData()
+      if (this.spuId && this.catalogId) {
+        this.showBaseAttrs()
+        this.getSpuBaseAttrs()
+      }
+    },
+    clearData() {
+      this.dataResp.attrGroups = []
+      this.dataResp.baseAttrs = []
+      this.spuAttrsMap = {}
+    },
+    showBaseAttrs() {
+      const _this = this
+      getAttrGroupsWithAttr(this.catalogId).then((res) => {
+        if (res.success) {
+          // 对表单的baseAttrs进行初始化
+          res.data.forEach(item => {
+            const attrArray = []
+            item.attrs.forEach(attr => {
+              let v = ''
+              if (_this.spuAttrsMap['' + attr.attrId]) {
+                v = _this.spuAttrsMap['' + attr.attrId].attrValue.split(',')
+                if (v.length === 1) {
+                  v = v[0] + ''
+                }
+              }
+              attrArray.push({
+                attrId: attr.attrId,
+                attrValues: v,
+                showDesc: attr.showDesc
+              })
+            })
+            this.dataResp.baseAttrs.push(attrArray)
+          })
+          this.dataResp.attrGroups = res.data
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    getSpuBaseAttrs() {
+      getAttrValuesBySpuId(this.spuId).then((res) => {
+        if (res.success) {
+          res.data.forEach(item => {
+            this.spuAttrsMap['' + item.attrId] = item
+          })
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    // 确认修改规格信息
+    handleAttrOk() {
+      console.log('fdsfds', this.dataResp.baseAttrs)
+      // spu_id  attr_id  attr_name             attr_value             attr_sort  quick_show
+      const submitData = []
+      this.dataResp.baseAttrs.forEach(item => {
+        item.forEach(attr => {
+          let val = ''
+          if (attr.attrValues instanceof Array) {
+            val = attr.attrValues.join(',')
+          } else {
+            val = attr.attrValues
+          }
+
+          if (val !== '') {
+            submitData.push({
+              attrId: attr.attrId,
+              attrName: attr.attrName,
+              attrValue: val,
+              quickShow: attr.showDesc
+            })
+          }
+        })
+      })
+      this.$confirm('修改商品规格信息, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        updateAttrValuesBySpuId(this.spuId, submitData).then((res) => {
+          if (res.success) {
+            this.attrVisible = false
+          } else {
+            this.$error(res.message)
+          }
+        })
+      }).catch((e) => {
+        this.$message.error('修改失败：' + e)
+      })
+    },
     // 重置表单
     resetForm(formName) {
       if (this.$refs[formName] !== undefined) {
@@ -441,18 +514,6 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
-    // // 每页记录数改变时触发
-    // handleSizeChange(size) {
-    //   this.pagination.size = size
-    //   // 重新加载数据
-    //   this.loadData()
-    // },
-    // // 页码改变时触发
-    // handleCurrentChange(current) {
-    //   this.pagination.current = current
-    //   // 重新加载数据
-    //   this.loadData()
-    // },
     // 上传文件之前调用
     beforeUpload(file) {
       const isPicture = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'
