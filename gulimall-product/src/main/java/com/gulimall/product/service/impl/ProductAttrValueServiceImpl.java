@@ -11,7 +11,9 @@ import com.gulimall.product.mapper.ProductAttrValueMapper;
 import com.gulimall.product.service.ProductAttrValueService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,6 +21,9 @@ import java.util.stream.Collectors;
 
 @Service("productAttrValueService")
 public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueMapper, ProductAttrValueEntity> implements ProductAttrValueService {
+
+    @Resource
+    private ProductAttrValueMapper productAttrValueMapper;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -45,5 +50,34 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueMap
             return productAttrValueEntity;
         }).collect(Collectors.toList());
         this.saveBatch(productAttrValueEntities);
+    }
+
+    /**
+     * 根据spuiId查询属性列表
+     *
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<ProductAttrValueEntity> listAttrValuesBySpuId(Long spuId) {
+        return productAttrValueMapper.listAttrValuesBySpuId(spuId);
+    }
+
+    /**
+     * 更新spu规格信息
+     *
+     * @param spuId
+     * @param attrValues
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateAttrValuesBySpuId(Long spuId, List<SpuBaseAttrDTO> attrValues) {
+        // 删除旧的
+        QueryWrapper<ProductAttrValueEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("spu_id", spuId);
+        this.remove(queryWrapper);
+
+        // 保存新的
+        saveSpuAttrs(attrValues, spuId);
     }
 }

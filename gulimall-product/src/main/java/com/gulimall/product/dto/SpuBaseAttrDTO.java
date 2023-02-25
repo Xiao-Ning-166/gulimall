@@ -19,7 +19,7 @@ public class SpuBaseAttrDTO {
     /**
      * 属性值
      */
-    private String attrValues;
+    private String attrValue;
 
     /**
      * 是否是快速展示

@@ -2,6 +2,7 @@ package com.gulimall.product.controller;
 
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.common.core.vo.R;
+import com.gulimall.product.dto.SpuBaseAttrDTO;
 import com.gulimall.product.entity.ProductAttrValueEntity;
 import com.gulimall.product.service.ProductAttrValueService;
 import io.swagger.annotations.Api;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -30,7 +32,7 @@ import java.util.Map;
  * @date 2022-10-23 19:07:59
  */
 @RestController
-@RequestMapping("/productattrvalue")
+@RequestMapping("/product-attr/values")
 @Api(tags = "spu属性接口")
 public class ProductAttrValueController {
     @Autowired
@@ -45,6 +47,27 @@ public class ProductAttrValueController {
         PageUtils page = productAttrValueService.queryPage(params);
 
         return R.ok(page);
+    }
+
+    /**
+     * 列表
+     */
+    @GetMapping("/{spuId}")
+    @ApiOperation(value = "分页查询spu属性列表", notes = "分页查询spu属性列表", response = R.class)
+    public R getAttrValuesBySpuId(@PathVariable("spuId") Long SpuId) {
+        List<ProductAttrValueEntity> data = productAttrValueService.listAttrValuesBySpuId(SpuId);
+        return R.ok(data);
+    }
+
+    /**
+     * 列表
+     */
+    @PutMapping("/{spuId}")
+    @ApiOperation(value = "分页查询spu属性列表", notes = "分页查询spu属性列表", response = R.class)
+    public R updateAttrValuesBySpuId(@PathVariable("spuId") Long spuId,
+                                     @RequestBody List<SpuBaseAttrDTO> attrValues) {
+        productAttrValueService.updateAttrValuesBySpuId(spuId, attrValues);
+        return R.success();
     }
 
 

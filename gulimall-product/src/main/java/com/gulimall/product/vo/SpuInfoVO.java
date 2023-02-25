@@ -1,6 +1,5 @@
 package com.gulimall.product.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,9 +19,8 @@ public class SpuInfoVO implements Serializable {
     /**
      * 商品id
      */
-    @TableId
     @ApiModelProperty(value = "主键")
-    private Long id;
+    private String id;
     /**
      * 商品名称
      */
@@ -38,6 +36,11 @@ public class SpuInfoVO implements Serializable {
      */
     @ApiModelProperty(value = "所属分类")
     private String catalogName;
+    /**
+     * 所属分类id
+     */
+    @ApiModelProperty(value = "所属分类")
+    private String catalogId;
     /**
      * 品牌id
      */
