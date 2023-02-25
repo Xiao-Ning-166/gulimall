@@ -1,8 +1,11 @@
 package com.gulimall.storage.mapper;
 
-import com.gulimall.storage.entity.WareSkuEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.gulimall.storage.entity.WareSkuEntity;
+import com.gulimall.storage.vo.WareSkuVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 商品库存
@@ -14,4 +17,13 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface WareSkuMapper extends BaseMapper<WareSkuEntity> {
 
+    /**
+     * 分页查询商品库存列表
+     *
+     * @param page
+     * @param storageId 仓库id
+     * @param skuId
+     * @return
+     */
+    IPage<WareSkuVO> queryPage(IPage<WareSkuVO> page, @Param("storageId") String storageId, @Param("skuId") String skuId);
 }

@@ -17,5 +17,46 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
+    <!-- 分页查询采购单信息 -->
+    <select id="queryPage" resultType="com.gulimall.storage.vo.PurchaseOrderVO">
+        SELECT
+            t1.id, t1.name, t1.assignee_name, t1.phone, t1.priority, t1.status,
+            t1.ware_id, t2.name AS 'ware_name', t1.amount, t1.create_time, t1.update_time
+        FROM
+            wms_purchase AS t1
+            LEFT JOIN wms_ware_info AS t2 ON t1.ware_id = t2.id
+        <where>
+            <if test="purchaseDTO.status != null">
+                t1.status = #{purchaseDTO.status}
+            </if>
+        </where>
+    </select>
+
+    <select id="listPurchasesSelectVOs" resultType="com.gulimall.storage.vo.PurchaseSelectVO">
+        SELECT
+            id, name
+        FROM
+            wms_purchase
+        WHERE
+            status = 0 OR status = 1
+    </select>
+
+
+    <select id="listPurchaseOrders" resultType="com.gulimall.storage.entity.PurchaseEntity">
+        SELECT
+            *
+        FROM
+            wms_purchase
+        <where>
+            <if test="orderIds != null and orderIds.size > 0">
+                id IN
+                <foreach collection="orderIds" index="index" item="orderId" separator="," open="(" close=")">
+                    #{orderId}
+                </foreach>
+            </if>
+            AND (status = 0 OR status = 1)
+        </where>
+    </select>
+
 
 </mapper>

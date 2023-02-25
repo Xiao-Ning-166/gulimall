@@ -112,6 +112,13 @@
                 <version>${gulimall.version}</version>
             </dependency>
 
+            <!-- 谷粒商城-商品服务-对内接口 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-api-product</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
             <!-- commons-lang3 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>

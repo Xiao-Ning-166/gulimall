@@ -26,6 +26,18 @@ spring:
             # 路径重写 /api/** ==> /**
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+        # 仓储服务
+        - id: storage_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-storage
+          # 匹配规则
+          predicates:
+            - Path=/api/storage/**
+          # 过滤器配置
+          filters:
+            # 路径重写 /api/** ==> /**
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
         # 第三方服务-oss服务
         - id: third_oss_route
           # 匹配后提供服务的地址

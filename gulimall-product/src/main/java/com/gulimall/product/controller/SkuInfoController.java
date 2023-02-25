@@ -7,7 +7,6 @@ import com.gulimall.product.dto.SkuQueryDTO;
 import com.gulimall.product.entity.SkuInfoEntity;
 import com.gulimall.product.service.SkuInfoService;
 import com.gulimall.product.vo.SkuInfoVO;
-import com.gulimall.product.vo.SpuInfoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-
+import java.util.List;
 
 
 /**
@@ -96,6 +95,19 @@ public class SkuInfoController {
 		skuInfoService.removeByIds(Arrays.asList(skuIds));
 
         return R.success();
+    }
+
+    /**
+     * 批量获取sku信息
+     *
+     * @param skuIds skuId集合
+     * @return
+     */
+    @GetMapping("/skus")
+    @ApiOperation(value = "批量获取sku信息", notes = "批量获取sku信息", response = R.class)
+    R<?> getSkuInfoByIds(@RequestParam("skuIds") List<Long> skuIds) {
+        List<SkuInfoEntity> entities = skuInfoService.query().in("sku_id", skuIds).list();
+        return R.ok(entities);
     }
 
 }

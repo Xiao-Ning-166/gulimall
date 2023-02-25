@@ -1,19 +1,25 @@
 package com.gulimall.storage.controller;
 
-import com.gulimall.common.core.utils.PageUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gulimall.common.core.vo.R;
+import com.gulimall.storage.dto.WareInfoDTO;
 import com.gulimall.storage.entity.WareInfoEntity;
 import com.gulimall.storage.service.WareInfoService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.Map;
-
 
 
 /**
@@ -24,30 +30,37 @@ import java.util.Map;
  * @date 2022-10-24 21:41:55
  */
 @RestController
-@RequestMapping("/wareinfo")
+@RequestMapping("/ware-info/storages")
+@Api(value = "仓库信息接口")
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
 
     /**
-     * 列表
+     * 分页查询仓库信息
+     *
+     * @param keyword 查询关键词
+     * @param current 当前页码
+     * @param size    每页大小
+     * @return
      */
-    @RequestMapping("/list")
-    // @RequiresPermissions("storage:wareinfo:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = wareInfoService.queryPage(params);
+    @GetMapping
+    public R list(String keyword,
+                  @RequestParam(value = "current", defaultValue = "1") Integer current,
+                  @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-        return R.ok(page);
+        IPage<WareInfoEntity> page = new Page<>(current, size);
+        IPage<WareInfoEntity> wareInfoPage = wareInfoService.queryPage(page, keyword);
+        return R.ok(wareInfoPage);
     }
 
 
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
-    // @RequiresPermissions("storage:wareinfo:info")
-    public R info(@PathVariable("id") Long id){
-		WareInfoEntity wareInfo = wareInfoService.getById(id);
+    @GetMapping("/{id}")
+    public R info(@PathVariable("id") Long id) {
+        WareInfoEntity wareInfo = wareInfoService.getById(id);
 
         return R.ok(wareInfo);
     }
@@ -55,21 +68,18 @@ public class WareInfoController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
-    // @RequiresPermissions("storage:wareinfo:save")
-    public R save(@RequestBody WareInfoEntity wareInfo){
-		wareInfoService.save(wareInfo);
-
+    @PostMapping
+    public R save(@Validated @RequestBody WareInfoDTO wareInfoDTO) {
+        wareInfoService.saveWareInfo(wareInfoDTO);
         return R.success();
     }
 
     /**
      * 修改
      */
-    @RequestMapping("/update")
-    // @RequiresPermissions("storage:wareinfo:update")
-    public R update(@RequestBody WareInfoEntity wareInfo){
-		wareInfoService.updateById(wareInfo);
+    @PutMapping
+    public R update(@RequestBody WareInfoEntity wareInfo) {
+        wareInfoService.updateById(wareInfo);
 
         return R.success();
     }
@@ -77,10 +87,10 @@ public class WareInfoController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping
     // @RequiresPermissions("storage:wareinfo:delete")
-    public R delete(@RequestBody Long[] ids){
-		wareInfoService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        wareInfoService.removeByIds(Arrays.asList(ids));
 
         return R.success();
     }

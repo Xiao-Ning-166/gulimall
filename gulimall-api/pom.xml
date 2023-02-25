@@ -14,6 +14,7 @@
     <description>gulimall 内网接口</description>
     <modules>
         <module>gulimall-api-coupon</module>
+        <module>gulimall-api-product</module>
     </modules>
 
     <properties>

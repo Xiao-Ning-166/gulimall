@@ -1,29 +1,48 @@
 package com.gulimall.storage.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gulimall.common.core.utils.PageUtils;
-import com.gulimall.common.core.utils.Query;
+import com.gulimall.storage.dto.WareInfoDTO;
 import com.gulimall.storage.entity.WareInfoEntity;
 import com.gulimall.storage.mapper.WareInfoMapper;
 import com.gulimall.storage.service.WareInfoService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 
 @Service("wareInfoService")
 public class WareInfoServiceImpl extends ServiceImpl<WareInfoMapper, WareInfoEntity> implements WareInfoService {
 
+    /**
+     * 分页查询仓库信息
+     *
+     * @param page    分页条件
+     * @param keyword 关键词
+     * @return
+     */
     @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        IPage<WareInfoEntity> page = this.page(
-                new Query<WareInfoEntity>().getPage(params),
-                new QueryWrapper<WareInfoEntity>()
-        );
-
-        return new PageUtils(page);
+    public IPage<WareInfoEntity> queryPage(IPage<WareInfoEntity> page, String keyword) {
+        LambdaQueryWrapper<WareInfoEntity> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        IPage<WareInfoEntity> wareInfoPage = this.query()
+                .like(StrUtil.isNotBlank(keyword), "name", keyword)
+                .or()
+                .like(StrUtil.isNotBlank(keyword),"address", keyword)
+                .or()
+                .like(StrUtil.isNotBlank(keyword),"area_code", keyword).page(page);
+        return wareInfoPage;
     }
 
+    /**
+     * 保存仓库信息
+     *
+     * @param wareInfoDTO
+     */
+    @Override
+    public void saveWareInfo(WareInfoDTO wareInfoDTO) {
+        WareInfoEntity wareInfoEntity = new WareInfoEntity();
+        BeanUtils.copyProperties(wareInfoDTO, wareInfoEntity);
+        this.save(wareInfoEntity);
+    }
 }

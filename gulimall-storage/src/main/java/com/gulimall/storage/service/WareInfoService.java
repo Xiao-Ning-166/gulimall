@@ -1,10 +1,9 @@
 package com.gulimall.storage.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.gulimall.common.core.utils.PageUtils;
+import com.gulimall.storage.dto.WareInfoDTO;
 import com.gulimall.storage.entity.WareInfoEntity;
-
-import java.util.Map;
 
 /**
  * 仓库信息
@@ -15,6 +14,21 @@ import java.util.Map;
  */
 public interface WareInfoService extends IService<WareInfoEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 分页查询仓库信息
+     *
+     * @param page    分页条件
+     * @param keyword 关键词
+     * @return
+     */
+    IPage<WareInfoEntity> queryPage(IPage<WareInfoEntity> page, String keyword);
+
+    /**
+     * 保存仓库信息
+     *
+     * @param wareInfoDTO
+     */
+    void saveWareInfo(WareInfoDTO wareInfoDTO);
 }
 
