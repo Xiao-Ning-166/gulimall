@@ -70,10 +70,10 @@
       <el-table-column prop="catalogName" label="分类" width="100" align="center" />
       <el-table-column prop="brandName" label="品牌" width="100" align="center" />
       <el-table-column prop="publishStatus" label="状态" width="100" align="center">
-        <template slot-scope="scope">
-          <el-tag v-show="scope.publishStatus === 0" type="info">新建</el-tag>
-          <el-tag v-show="scope.publishStatus === 1" type="success">上架</el-tag>
-          <el-tag v-show="scope.publishStatus === 2" type="danger">下架</el-tag>
+        <template slot-scope="{row}">
+          <el-tag v-show="row.publishStatus === 0" type="info">新建</el-tag>
+          <el-tag v-show="row.publishStatus === 1" type="success">上架</el-tag>
+          <el-tag v-show="row.publishStatus === 2" type="danger">下架</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="180" align="center" />
@@ -81,11 +81,11 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button
-            icon="el-icon-connection"
+            icon="el-icon-upload2"
             size="mini"
             type="primary"
             title="上架"
-            @click="handleRelation(scope.row)"
+            @click="handlePutaway(scope.row)"
           />
           <el-button
             icon="el-icon-cpu"
@@ -226,7 +226,8 @@
 <script>
 
 import {
-  getSpuList
+  getSpuList,
+  spuPutaway
 } from '@/api/product/spu.js'
 import { getAttrGroupsWithAttr } from '@/api/product/attributeGroup'
 import { getAttrValuesBySpuId, updateAttrValuesBySpuId } from '@/api/product/productAttrValue'
@@ -539,53 +540,19 @@ export default {
       })
       console.log('_this.brandForm', _this.brandForm)
     },
-    handleRelation(row) {
-      this.categoryRelationForm.brandId = row.brandId
-      this.getBrandCategoryList(row.brandId)
-    },
-    // 得到品牌关联的分类列表
-    getBrandCategoryList(brandId) {
-      // 查询当前品牌已经关联的分类列表
-      getRelationCategoryList(brandId).then((res) => {
-        if (res.code === 200) {
-          this.relationCategoryList = res.data
-          this.relationCategoryVisible = true
-        } else {
-          this.$message.error(res.message)
-        }
-      })
-    },
-    // 保存关系
-    handleSaveRelation() {
-      console.log('关系', this.categoryRelationForm)
-      // 保存关系
-      saveBrandCategoryRelation(this.categoryRelationForm).then((res) => {
-        if (res.code === 200) {
-          this.getBrandCategoryList(this.categoryRelationForm.brandId)
-          this.popoverVisible = false
-        } else {
-          res.$message.error(res.message)
-        }
-      })
-    },
-    // 删除关系
-    handleRemoveRelation(row) {
-      this.$confirm(`确定要解除和分类【${row.catelogName}】的关联吗？`, '提示', {
+    // 商品上架
+    handlePutaway(row) {
+      console.log(row)
+      this.$confirm(`确定要上架商品【${row.spuName}】吗？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const ids = [row.id]
-        // 删除操作
-        removeRelation(ids).then((res) => {
-          if (res.code === 200) {
-            // 重新加载数据
-            this.getBrandCategoryList(this.categoryRelationForm.brandId)
-            this.$notify({
-              title: '成功',
-              message: '关联解除成功!',
-              type: 'success'
-            })
+        spuPutaway(row.id).then((res) => {
+          if (res.isSuccess) {
+
+          } else {
+            this.$message.error(res.message)
           }
         })
       })

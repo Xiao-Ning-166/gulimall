@@ -17,3 +17,12 @@ export function getSpuList(params) {
     params
   })
 }
+
+// 商品上架
+export function spuPutaway(id) {
+  return request({
+    url: '/product/spuinfo/putaway',
+    method: 'get',
+    params: { 'id': id }
+  })
+}
