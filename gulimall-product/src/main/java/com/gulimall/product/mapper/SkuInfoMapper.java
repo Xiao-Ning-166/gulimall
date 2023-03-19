@@ -2,11 +2,14 @@ package com.gulimall.product.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.gulimall.api.search.model.dto.ProductPutawayEsDTO;
 import com.gulimall.product.dto.SkuQueryDTO;
 import com.gulimall.product.entity.SkuInfoEntity;
 import com.gulimall.product.vo.SkuInfoVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * sku信息
@@ -26,4 +29,12 @@ public interface SkuInfoMapper extends BaseMapper<SkuInfoEntity> {
      * @return
      */
     IPage<SkuInfoVO> queryPage(@Param("skuQueryDTO") SkuQueryDTO skuQueryDTO, IPage<SkuInfoVO> page);
+
+    /**
+     * 查询sku集合
+     *
+     * @param spuId
+     * @return
+     */
+    List<ProductPutawayEsDTO> listSkusBySpuId(String spuId);
 }

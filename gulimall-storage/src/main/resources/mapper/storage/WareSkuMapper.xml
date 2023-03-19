@@ -30,4 +30,19 @@
         </where>
     </select>
 
+
+    <select id="listSkuWareBySkuIds" resultType="com.gulimall.api.storage.model.dto.SkuStorageDTO">
+        SELECT
+            sku_id, SUM(stock) > 0
+        FROM
+            wms_ware_sku
+        WHERE
+            sku_id IN
+            <foreach collection="skuIds" index="index" item="skuId" separator="," open="(" close=")">
+                #{skuId}
+            </foreach>
+        GROUP BY
+            sku_id
+    </select>
+
 </mapper>

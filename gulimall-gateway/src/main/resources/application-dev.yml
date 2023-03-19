@@ -38,6 +38,18 @@ spring:
             # 路径重写 /api/** ==> /**
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+        # 搜索服务
+        - id: search_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-search
+          # 匹配规则
+          predicates:
+            - Path=/api/search/**
+          # 过滤器配置
+          filters:
+            # 路径重写 /api/** ==> /**
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
         # 第三方服务-oss服务
         - id: third_oss_route
           # 匹配后提供服务的地址

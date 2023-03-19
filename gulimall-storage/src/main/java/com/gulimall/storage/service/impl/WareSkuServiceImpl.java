@@ -8,6 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gulimall.api.product.feign.SkuInfoFeignClient;
+import com.gulimall.api.storage.model.dto.SkuStorageDTO;
 import com.gulimall.common.core.vo.R;
 import com.gulimall.storage.bo.StockBO;
 import com.gulimall.storage.entity.WareSkuEntity;
@@ -90,5 +91,16 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuMapper, WareSkuEntity
         }
 
         return map;
+    }
+
+    /**
+     * 查询sku库存
+     *
+     * @param skuIds
+     * @return
+     */
+    @Override
+    public List<SkuStorageDTO> listSkuWareBySkuIds(List<Long> skuIds) {
+        return wareSkuMapper.listSkuWareBySkuIds(skuIds);
     }
 }

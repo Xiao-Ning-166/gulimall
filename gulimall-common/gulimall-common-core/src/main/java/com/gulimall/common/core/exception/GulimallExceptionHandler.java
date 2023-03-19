@@ -45,6 +45,19 @@ public class GulimallExceptionHandler {
      * @param e
      * @return
      */
+    @ExceptionHandler(value = GulimallException.class)
+    public R handleGulimallException(GulimallException e) {
+        log.error("发生异常，原因：{}", e.getMessage(), e);
+        return R.error(e.getHttpStatusCode(), e.getMessage());
+    }
+
+
+    /**
+     * 其他异常
+     *
+     * @param e
+     * @return
+     */
     @ExceptionHandler(value = Exception.class)
     public R handleException(Exception e) {
         log.error("发生异常，原因：{}", e.getMessage(), e);

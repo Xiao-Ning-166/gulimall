@@ -3,6 +3,7 @@ package com.gulimall.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gulimall.api.search.model.dto.ProductAttrEsDTO;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.common.core.utils.Query;
 import com.gulimall.product.dto.SpuBaseAttrDTO;
@@ -79,5 +80,16 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueMap
 
         // 保存新的
         saveSpuAttrs(attrValues, spuId);
+    }
+
+    /**
+     * 查询需要检索字段
+     *
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<ProductAttrEsDTO> listAttrValues(String spuId) {
+        return productAttrValueMapper.listAttrValues(spuId);
     }
 }

@@ -32,5 +32,12 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
      * @return
      */
     IPage<SpuInfoVO> queryPage(SpuQueryDTO spuQueryDTO, IPage<SpuInfoVO> page);
+
+    /**
+     * 商品上架
+     *
+     * @param id
+     */
+    void putaway(String id);
 }
 

@@ -1,6 +1,7 @@
 package com.gulimall.product.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gulimall.api.search.model.dto.ProductAttrEsDTO;
 import com.gulimall.product.entity.ProductAttrValueEntity;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -23,4 +24,12 @@ public interface ProductAttrValueMapper extends BaseMapper<ProductAttrValueEntit
      * @return
      */
     List<ProductAttrValueEntity> listAttrValuesBySpuId(Long spuId);
+
+    /**
+     * 查询需要检索字段
+     *
+     * @param spuId
+     * @return
+     */
+    List<ProductAttrEsDTO> listAttrValues(String spuId);
 }

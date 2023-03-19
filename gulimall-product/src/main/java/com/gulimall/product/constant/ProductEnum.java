@@ -32,4 +32,29 @@ public class ProductEnum {
         }
     }
 
+
+    /**
+     * spu发布状态
+     */
+    public enum publishStatus {
+        /**
+         * 已上架
+         */
+        PUBLISHED(1),
+        /**
+         * 下架
+         */
+        UN_PUBLISHED(0);
+
+        private final Integer value;
+
+        publishStatus(Integer value) {
+            this.value = value;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+    }
+
 }

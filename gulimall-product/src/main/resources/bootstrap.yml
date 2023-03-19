@@ -29,3 +29,14 @@ spring:
         # 扩展配置，可以覆盖共享配置
         extension-configs:
           - ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+feign:
+#  okhttp:
+#    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 60000
+        read-timeout: 60000
+#  httpclient:
+#    enabled: false

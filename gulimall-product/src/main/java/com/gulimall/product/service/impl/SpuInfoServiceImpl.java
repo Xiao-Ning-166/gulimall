@@ -1,10 +1,19 @@
 package com.gulimall.product.service.impl;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gulimall.api.coupon.dto.SpuBoundDTO;
 import com.gulimall.api.coupon.feign.SpuBoundFeignClient;
+import com.gulimall.api.search.feign.ProductEsFeignClient;
+import com.gulimall.api.search.model.dto.ProductAttrEsDTO;
+import com.gulimall.api.search.model.dto.ProductPutawayEsDTO;
+import com.gulimall.api.storage.feign.ProductStorageFeignClient;
+import com.gulimall.api.storage.model.dto.SkuStorageDTO;
+import com.gulimall.common.core.exception.GulimallException;
+import com.gulimall.common.core.vo.R;
+import com.gulimall.product.constant.ProductEnum;
 import com.gulimall.product.dto.SpuBaseAttrDTO;
 import com.gulimall.product.dto.SpuBoundsDTO;
 import com.gulimall.product.dto.SpuQueryDTO;
@@ -24,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * spu信息
@@ -51,6 +61,12 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
     @Autowired
     private SpuBoundFeignClient spuBoundFeignClient;
+
+    @Autowired
+    private ProductStorageFeignClient productStorageFeignClient;
+
+    @Autowired
+    private ProductEsFeignClient productEsFeignClient;
 
     /**
      * 发布商品
@@ -107,4 +123,60 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
         return spuInfoMapper.queryPage(spuQueryDTO, page);
     }
 
+    /**
+     * 商品上架
+     *
+     * @param id
+     */
+    @Override
+    public void putaway(String id) {
+        // 查询spu规格参数集合
+        List<ProductAttrEsDTO> attrValues = productAttrValueService.listAttrValues(id);
+        // 查询sku集合
+        List<ProductPutawayEsDTO> productSkus = skuInfoService.listSkusBySpuId(id);
+        // 查询sku库存
+        List<Long> skuIds = productSkus.stream().map(sku -> Convert.toLong(sku.getSkuId())).collect(Collectors.toList());
+        R<List<SkuStorageDTO>> r = productStorageFeignClient.querySkuStorageBySkuIds(skuIds);
+        if (!r.isSuccess()) {
+            throw new GulimallException("查询sku库存出错");
+        }
+        List<SkuStorageDTO> skuStorages = r.getData();
+        // 封装es对象
+        productSkus.stream().forEach(productSku -> {
+            productSku.setAttrs(attrValues);
+            Boolean hasStock = findSkuStorage(productSku.getSkuId(), skuStorages);
+            productSku.setHasStock(hasStock);
+            productSku.setHotScore(0);
+        });
+        // 向es中添加文档
+        R<?> putawayResult = productEsFeignClient.productPutaway(productSkus);
+        if (!putawayResult.isSuccess()) {
+            throw new GulimallException("商品上架失败!请稍后重试");
+        }
+        // 修改状态
+        this.update()
+                .set("publish_status", ProductEnum.publishStatus.PUBLISHED.getValue())
+                .eq("id", id)
+                .update();
+    }
+
+    /**
+     * 查找商品库存
+     *
+     * @param skuId
+     * @param skuStorages
+     * @return
+     */
+    private Boolean findSkuStorage(String skuId, List<SkuStorageDTO> skuStorages) {
+        Boolean hasStock = false;
+
+        for (SkuStorageDTO skuStorage : skuStorages) {
+            if (skuId.equals(skuStorage.getSkuId())) {
+                hasStock = skuStorage.getHasStock();
+                break;
+            }
+        }
+
+        return hasStock;
+    }
 }

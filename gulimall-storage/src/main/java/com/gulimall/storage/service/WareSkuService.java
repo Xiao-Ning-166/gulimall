@@ -2,6 +2,7 @@ package com.gulimall.storage.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gulimall.api.storage.model.dto.SkuStorageDTO;
 import com.gulimall.storage.bo.StockBO;
 import com.gulimall.storage.entity.WareSkuEntity;
 import com.gulimall.storage.vo.WareSkuVO;
@@ -34,5 +35,13 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @param stockBOs
      */
     void addStock(List<StockBO> stockBOs);
+
+    /**
+     * 查询sku库存
+     *
+     * @param skuIds
+     * @return
+     */
+    List<SkuStorageDTO> listSkuWareBySkuIds(List<Long> skuIds);
 }
 

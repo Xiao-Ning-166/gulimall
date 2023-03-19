@@ -12,9 +12,12 @@
     <artifactId>gulimall-api</artifactId>
     <packaging>pom</packaging>
     <description>gulimall 内网接口</description>
+
     <modules>
         <module>gulimall-api-coupon</module>
         <module>gulimall-api-product</module>
+        <module>gulimall-api-search</module>
+        <module>gulimall-api-storage</module>
     </modules>
 
     <properties>

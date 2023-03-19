@@ -24,4 +24,16 @@
             t1.spu_id = #{spuId}
     </select>
 
+    <select id="listAttrValues" resultType="com.gulimall.api.search.model.dto.ProductAttrEsDTO">
+        SELECT
+            *
+        FROM
+            pms_product_attr_value AS t1
+            LEFT JOIN pms_attr AS t2 ON t1.attr_id = t2.attr_id
+        WHERE
+            t1.spu_id = #{spuId}
+            AND
+            t2.search_type = 1
+    </select>
+
 </mapper>

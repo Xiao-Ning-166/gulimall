@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 
-
 /**
  * spu信息
  *
@@ -47,7 +46,7 @@ public class SpuInfoController {
     @ApiOperation(value = "分页查询spu信息列表", notes = "分页查询spu信息列表", response = R.class)
     public R list(SpuQueryDTO spuQueryDTO,
                   @RequestParam(value = "current", defaultValue = "1") Integer current,
-                  @RequestParam(value = "size", defaultValue = "10") Integer size){
+                  @RequestParam(value = "size", defaultValue = "10") Integer size) {
         IPage<SpuInfoVO> page = new Page<>(current, size);
         IPage<SpuInfoVO> spuInfoPage = spuInfoService.queryPage(spuQueryDTO, page);
 
@@ -60,8 +59,8 @@ public class SpuInfoController {
      */
     @GetMapping("/info/{id}")
     @ApiOperation(value = "根据id查询spu信息", notes = "根据id查询spu信息", response = R.class)
-    public R info(@PathVariable("id") Long id){
-		SpuInfoEntity spuInfo = spuInfoService.getById(id);
+    public R info(@PathVariable("id") Long id) {
+        SpuInfoEntity spuInfo = spuInfoService.getById(id);
 
         return R.ok(spuInfo);
     }
@@ -71,7 +70,7 @@ public class SpuInfoController {
      */
     @PostMapping("/save")
     @ApiOperation(value = "发布商品-保存spu信息", notes = "发布商品-保存spu信息", response = R.class)
-    public R save(@Validated @RequestBody SpuSaveDTO spuSaveDTO){
+    public R save(@Validated @RequestBody SpuSaveDTO spuSaveDTO) {
         spuInfoService.publishProduct(spuSaveDTO);
         return R.success();
     }
@@ -81,8 +80,8 @@ public class SpuInfoController {
      */
     @PutMapping("/update")
     @ApiOperation(value = "修改spu信息", notes = "修改spu信息", response = R.class)
-    public R update(@RequestBody SpuInfoEntity spuInfo){
-		spuInfoService.updateById(spuInfo);
+    public R update(@RequestBody SpuInfoEntity spuInfo) {
+        spuInfoService.updateById(spuInfo);
 
         return R.success();
     }
@@ -92,10 +91,23 @@ public class SpuInfoController {
      */
     @DeleteMapping("/delete")
     @ApiOperation(value = "批量删除spu信息", notes = "批量删除spu信息", response = R.class)
-    public R delete(@RequestBody Long[] ids){
-		spuInfoService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        spuInfoService.removeByIds(Arrays.asList(ids));
 
         return R.success();
+    }
+
+    /**
+     * 商品上架
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/putaway")
+    @ApiOperation(value = "商品上架", notes = "商品上架", response = R.class)
+    public R spuPutaway(@RequestParam("id") String id) {
+        spuInfoService.putaway(id);
+        return R.success("上架成功");
     }
 
 }

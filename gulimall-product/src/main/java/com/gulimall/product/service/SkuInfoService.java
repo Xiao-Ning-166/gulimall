@@ -2,6 +2,7 @@ package com.gulimall.product.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gulimall.api.search.model.dto.ProductPutawayEsDTO;
 import com.gulimall.product.dto.SkuQueryDTO;
 import com.gulimall.product.dto.SpuSkuDTO;
 import com.gulimall.product.entity.SkuInfoEntity;
@@ -35,5 +36,13 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @return
      */
     IPage<SkuInfoVO> queryPage(SkuQueryDTO skuQueryDTO, IPage<SkuInfoVO> page);
+
+    /**
+     * 查询sku集合
+     *
+     * @param spuId
+     * @return
+     */
+    List<ProductPutawayEsDTO> listSkusBySpuId(String spuId);
 }
 

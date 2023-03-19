@@ -47,6 +47,18 @@
             <artifactId>gulimall-api-product</artifactId>
         </dependency>
 
+        <!-- 谷粒商城-搜索服务-对内接口 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-api-search</artifactId>
+        </dependency>
+
+        <!-- 谷粒商城-库存服务-对内接口 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-api-storage</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

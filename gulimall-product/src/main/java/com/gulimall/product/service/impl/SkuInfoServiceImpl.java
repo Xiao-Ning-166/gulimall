@@ -11,6 +11,7 @@ import com.gulimall.api.coupon.dto.SkuLadderDTO;
 import com.gulimall.api.coupon.feign.SkuFullReductionFeignClient;
 import com.gulimall.api.coupon.feign.SkuLadderFeignClient;
 import com.gulimall.api.coupon.feign.SkuMemberPriceFeignClient;
+import com.gulimall.api.search.model.dto.ProductPutawayEsDTO;
 import com.gulimall.product.constant.SkuConstants;
 import com.gulimall.product.dto.SkuAttrDTO;
 import com.gulimall.product.dto.SkuImageDTO;
@@ -26,7 +27,6 @@ import com.gulimall.product.service.SkuImagesService;
 import com.gulimall.product.service.SkuInfoService;
 import com.gulimall.product.service.SkuSaleAttrValueService;
 import com.gulimall.product.vo.SkuInfoVO;
-import com.gulimall.product.vo.SpuInfoVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -159,4 +159,14 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
     }
 
 
+    /**
+     * 查询sku集合
+     *
+     * @param spuId
+     * @return
+     */
+    @Override
+    public List<ProductPutawayEsDTO> listSkusBySpuId(String spuId) {
+        return skuInfoMapper.listSkusBySpuId(spuId);
+    }
 }

@@ -1,6 +1,7 @@
 package com.gulimall.product.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.gulimall.api.search.model.dto.ProductAttrEsDTO;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.product.dto.SpuBaseAttrDTO;
 import com.gulimall.product.entity.ProductAttrValueEntity;
@@ -42,5 +43,13 @@ public interface ProductAttrValueService extends IService<ProductAttrValueEntity
      * @param attrValues
      */
     void updateAttrValuesBySpuId(Long spuId, List<SpuBaseAttrDTO> attrValues);
+
+    /**
+     * 查询需要检索字段
+     *
+     * @param spuId
+     * @return
+     */
+    List<ProductAttrEsDTO> listAttrValues(String spuId);
 }
 

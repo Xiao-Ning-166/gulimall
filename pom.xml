@@ -27,6 +27,7 @@
         <module>gulimall-third-module</module>
         <module>gulimall-coupon</module>
         <module>gulimall-api</module>
+        <module>gulimall-search</module>
     </modules>
 
     <properties>
@@ -50,6 +51,10 @@
         <!-- swagger增强依赖 -->
         <knife4j.version>3.0.3</knife4j.version>
         <spring.javaformat.version>0.0.22</spring.javaformat.version>
+        <elasticsearch.version>7.17.9</elasticsearch.version>
+        <jakarta-json.version>2.0.1</jakarta-json.version>
+        <jackson-databind.version>2.12.3</jackson-databind.version>
+        <feign-okhttp.version>12.1</feign-okhttp.version>
     </properties>
 
     <!-- 依赖版本管理 -->
@@ -119,6 +124,20 @@
                 <version>${gulimall.version}</version>
             </dependency>
 
+            <!-- 谷粒商城-搜索服务-对内接口 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-api-search</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
+            <!-- 谷粒商城-库存服务-对内接口 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-api-storage</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
             <!-- commons-lang3 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -156,6 +175,43 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
+            </dependency>
+
+            <!-- feign-okhttp -->
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-okhttp</artifactId>
+                <version>${feign-okhttp.version}</version>
+            </dependency>
+
+
+
+            <!-- Elasticsearch Java API Client -->
+            <dependency>
+                <groupId>co.elastic.clients</groupId>
+                <artifactId>elasticsearch-java</artifactId>
+                <version>${elasticsearch.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.elasticsearch.client</groupId>
+                        <artifactId>elasticsearch-rest-client</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-databind.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.json</groupId>
+                <artifactId>jakarta.json-api</artifactId>
+                <version>${jakarta-json.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
