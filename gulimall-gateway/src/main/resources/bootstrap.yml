@@ -28,3 +28,13 @@ spring:
         # 扩展配置，可以覆盖共享配置
         extension-configs:
           - ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+    loadbalancer:
+      retry:
+        enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: trace
+    org.springframework.cloud.loadbalancer: trace
+    org.springframework.web.reactive: trace

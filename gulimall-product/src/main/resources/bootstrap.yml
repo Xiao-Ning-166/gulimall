@@ -30,6 +30,12 @@ spring:
         extension-configs:
           - ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
 
+
+  thymeleaf:
+    cache: true
+  mvc:
+    static-path-pattern: /product/**
+
 feign:
 #  okhttp:
 #    enabled: true

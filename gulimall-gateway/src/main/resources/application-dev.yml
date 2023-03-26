@@ -73,6 +73,18 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /admin/$\{segment}
 
+        # 后台管理服务
+        - id: gulimall_host_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-product
+          # 匹配规则
+          predicates:
+          - Host=**.gulimall.com,gulimall.com
+          # 过滤器配置
+          filters:
+            # 路径重写 /** ==> /product/**
+            - RewritePath=/(?<segment>.*), /product/$\{segment}
+
       discovery:
         locator:
           # 设置为true表明spring cloud gateway开启服务发现和路由的功能，
