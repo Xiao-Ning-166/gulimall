@@ -64,6 +64,12 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+        <!-- 谷粒商城-公共模块-缓存配置模块 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-common-cache</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

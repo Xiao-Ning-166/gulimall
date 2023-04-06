@@ -19,6 +19,7 @@
     <modules>
         <module>gulimall-common-core</module>
         <module>gulimall-common-database</module>
+        <module>gulimall-common-cache</module>
     </modules>
 
 </project>

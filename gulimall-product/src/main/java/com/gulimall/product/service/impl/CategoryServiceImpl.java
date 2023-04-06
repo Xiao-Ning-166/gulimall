@@ -1,24 +1,43 @@
 package com.gulimall.product.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.gulimall.common.cache.constant.CacheConstants;
 import com.gulimall.common.core.utils.PageUtils;
 import com.gulimall.common.core.utils.Query;
+import com.gulimall.product.constant.ProductCacheConstants;
 import com.gulimall.product.entity.CategoryEntity;
 import com.gulimall.product.mapper.CategoryMapper;
 import com.gulimall.product.service.CategoryService;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEntity> implements CategoryService {
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Resource
+    private RedissonClient redissonClient;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -144,8 +163,66 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, CategoryEnt
      */
     @Override
     public List<CategoryEntity> listTree() {
+        // 1、查询缓存
+        String categoryCacheKey = StrUtil.format(
+            "{}:{}:{}",
+            CacheConstants.CACHE_ROOT_PREFIX,
+            CacheConstants.PRODUCT_CACHE_PREFIX,
+            ProductCacheConstants.CATEGORY_CACHE
+        );
+        String categoryDataStr = stringRedisTemplate.opsForValue().get(categoryCacheKey);
+
+        // 2、判断缓存是否命中
+        if (StrUtil.isBlank(categoryDataStr)) {
+            // 缓存未命中，
+
+            // 加锁解决缓存击穿（大量请求访问同一个过期的key，导致大量请求数据库压力过大）
+            RLock lock = redissonClient.getLock(categoryCacheKey + CacheConstants.CACHE_KEY_SEPARATOR + "lock");
+            // 上锁
+            lock.lock();
+            try {
+                // 再次查询缓存
+                categoryDataStr = stringRedisTemplate.opsForValue().get(categoryCacheKey);
+                if (StrUtil.isNotBlank(categoryDataStr)) {
+                    // 缓存命中
+                    return JSONUtil.toBean(categoryDataStr, new TypeReference<List<CategoryEntity>>() {}, false);
+                }
+
+                // 查询数据库
+                List<CategoryEntity> topCategoryList = getCategoryEntitiesFormDB();
+
+                if (CollectionUtil.isEmpty(topCategoryList)) {
+                    // 缓存null值，防止缓存穿透（请求一个不存在的值）
+                    topCategoryList = Collections.EMPTY_LIST;
+                }
+
+                String categoryStr = JSONUtil.toJsonStr(topCategoryList);
+                // 3、存入缓存，过期时间1小时
+                stringRedisTemplate.opsForValue().set(
+                    categoryCacheKey,
+                    categoryStr,
+                    ProductCacheConstants.CACHE_EXPIRE_TIME,
+                    TimeUnit.SECONDS
+                );
+
+                return topCategoryList;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                // 解锁
+                lock.unlock();
+            }
+        }
+
+        // 3、缓存命中
+        List<CategoryEntity> categories = JSONUtil.toBean(categoryDataStr, new TypeReference<List<CategoryEntity>>() {}, false);
+        return categories;
+    }
+
+    @NotNull
+    private List<CategoryEntity> getCategoryEntitiesFormDB() {
         // 1、查询全部分类数据
-        List<CategoryEntity> allCategoryList = query().list();
+        List<CategoryEntity> allCategoryList = this.query().list();
 
         // 2、组装树形数据
         List<CategoryEntity> topCategoryList = allCategoryList.stream().filter((category) -> {
