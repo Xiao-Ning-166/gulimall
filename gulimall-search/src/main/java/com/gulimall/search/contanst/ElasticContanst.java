@@ -11,4 +11,6 @@ public interface ElasticContanst {
      */
     String PRODUCT_INDEX = "product_index";
 
+    Integer PRODUCT_DEFAULT_PAGE_SIZE = 16;
+
 }

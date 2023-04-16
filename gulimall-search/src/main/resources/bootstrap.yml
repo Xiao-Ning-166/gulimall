@@ -30,6 +30,11 @@ spring:
         extension-configs:
           - ${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
 
+  thymeleaf:
+    cache: false
+  mvc:
+    static-path-pattern: /search/**
+
 elasticsearch:
   host: 192.168.111.201
   port: 9200
