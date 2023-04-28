@@ -9,6 +9,7 @@ import com.gulimall.product.entity.AttrGroupEntity;
 import com.gulimall.product.mapper.AttrGroupMapper;
 import com.gulimall.product.service.AttrGroupService;
 import com.gulimall.product.vo.AttrGroupResponseVO;
+import com.gulimall.product.vo.SpuBaseAttrVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,4 +70,15 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupMapper, AttrGroup
         return attrGroupMapper.listAttrGroupWithAttr(catelogId);
     }
 
+    /**
+     * 通过spuId、分类id查询规格参数信息
+     *
+     * @param spuId
+     * @param catalogId
+     * @return
+     */
+    @Override
+    public List<SpuBaseAttrVO> listAttrGroupWithAttrsBySpuIdAndCatalogId(Long spuId, Long catalogId) {
+        return this.baseMapper.listAttrGroupWithAttrsBySpuIdAndCatalogId(spuId, catalogId);
+    }
 }

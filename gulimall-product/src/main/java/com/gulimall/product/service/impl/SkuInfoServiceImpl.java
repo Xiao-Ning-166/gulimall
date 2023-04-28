@@ -12,6 +12,9 @@ import com.gulimall.api.coupon.feign.SkuFullReductionFeignClient;
 import com.gulimall.api.coupon.feign.SkuLadderFeignClient;
 import com.gulimall.api.coupon.feign.SkuMemberPriceFeignClient;
 import com.gulimall.api.search.model.dto.ProductPutawayEsDTO;
+import com.gulimall.api.storage.feign.ProductStorageFeignClient;
+import com.gulimall.api.storage.model.dto.SkuStorageDTO;
+import com.gulimall.common.core.vo.R;
 import com.gulimall.product.constant.SkuConstants;
 import com.gulimall.product.dto.SkuAttrDTO;
 import com.gulimall.product.dto.SkuImageDTO;
@@ -21,20 +24,31 @@ import com.gulimall.product.dto.SpuSkuDTO;
 import com.gulimall.product.entity.SkuImagesEntity;
 import com.gulimall.product.entity.SkuInfoEntity;
 import com.gulimall.product.entity.SkuSaleAttrValueEntity;
+import com.gulimall.product.entity.SpuInfoDescEntity;
 import com.gulimall.product.entity.SpuInfoEntity;
 import com.gulimall.product.mapper.SkuInfoMapper;
+import com.gulimall.product.service.AttrGroupService;
 import com.gulimall.product.service.SkuImagesService;
 import com.gulimall.product.service.SkuInfoService;
 import com.gulimall.product.service.SkuSaleAttrValueService;
+import com.gulimall.product.service.SpuInfoDescService;
 import com.gulimall.product.vo.SkuInfoVO;
+import com.gulimall.product.vo.SkuItemVO;
+import com.gulimall.product.vo.SpuBaseAttrVO;
+import com.gulimall.product.vo.SpuSaleAttrVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
-
+@Slf4j
 @Service("skuInfoService")
 public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity> implements SkuInfoService {
 
@@ -55,6 +69,19 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
 
     @Autowired
     private SkuMemberPriceFeignClient skuMemberPriceFeignClient;
+
+    @Autowired
+    private SpuInfoDescService spuInfoDescService;
+
+    @Autowired
+    private AttrGroupService attrGroupService;
+
+    @Autowired
+    private ProductStorageFeignClient productStorageFeignClient;
+
+    @Autowired
+    private ThreadPoolExecutor bizThreadPoolExecutor;
+
 
     /**
      * 批量保存sku信息
@@ -168,5 +195,77 @@ public class SkuInfoServiceImpl extends ServiceImpl<SkuInfoMapper, SkuInfoEntity
     @Override
     public List<ProductPutawayEsDTO> listSkusBySpuId(String spuId) {
         return skuInfoMapper.listSkusBySpuId(spuId);
+    }
+
+    /**
+     * 查询sku详细信息
+     *
+     * @param skuId
+     * @return
+     */
+    @Override
+    public SkuItemVO getSkuDetailBySkuId(Long skuId) throws ExecutionException, InterruptedException {
+        SkuItemVO skuItemVO = new SkuItemVO();
+
+        // 1、sku基本信息
+        CompletableFuture<SkuInfoEntity> skuInfoFuture = CompletableFuture.supplyAsync(() -> {
+            SkuInfoEntity skuInfo = getById(skuId);
+            skuItemVO.setInfo(skuInfo);
+            return skuInfo;
+        }, bizThreadPoolExecutor);
+
+        // 2、sku图片信息
+        CompletableFuture<Void> imageFuture = CompletableFuture.runAsync(() -> {
+            List<SkuImagesEntity> skuImages = skuImagesService.query().eq("sku_id", skuId).list();
+            skuItemVO.setImages(skuImages);
+        }, bizThreadPoolExecutor);
+
+
+        // 3、库存信息
+        CompletableFuture<Void> storageFuture = CompletableFuture.runAsync(() -> {
+            R<List<SkuStorageDTO>> result = productStorageFeignClient.querySkuStorageBySkuIds(Arrays.asList(skuId));
+            if (!result.isSuccess()) {
+                log.error("查询商品库存失败，原因：{}", result.getMessage());
+            }
+            for (SkuStorageDTO skuStorageDTO : result.getData()) {
+                if (skuId.equals(skuStorageDTO.getSkuId())) {
+                    skuItemVO.setHasStock(skuStorageDTO.getHasStock());
+                    break;
+                }
+            }
+        }, bizThreadPoolExecutor);
+
+        // 4、sku销售属性信息
+        CompletableFuture<Void> saleAttrFuture = skuInfoFuture.thenAcceptAsync((skuInfo) -> {
+            List<SpuSaleAttrVO> saleAttrs = skuSaleAttrValueService.listSaleAttrsBySpuId(skuInfo.getSpuId());
+            skuItemVO.setSaleAttrs(saleAttrs);
+        });
+
+        // 5、spu介绍信息
+        CompletableFuture<Void> spuDescriptionFuture = skuInfoFuture.thenAcceptAsync((skuInfo) -> {
+            SpuInfoDescEntity spuInfoDesc = spuInfoDescService.query().eq("spu_id", skuInfo.getSpuId()).one();
+            skuItemVO.setDescription(spuInfoDesc);
+        }, bizThreadPoolExecutor);
+
+        // 5、spu规格参数信息
+        CompletableFuture<Void> baseAttrFuture = skuInfoFuture.thenAcceptAsync((skuInfo) -> {
+            Long spuId = skuInfo.getSpuId();
+            Long catalogId = skuInfo.getCatalogId();
+            List<SpuBaseAttrVO> baseAttrs = attrGroupService.listAttrGroupWithAttrsBySpuIdAndCatalogId(spuId, catalogId);
+            skuItemVO.setSkuBaseAttrs(baseAttrs);
+        });
+
+        // CompletableFuture.allOf(imageFuture, storageFuture, saleAttrFuture, spuDescriptionFuture, baseAttrFuture)
+        //         .exceptionally((exception) -> {
+        //             if (exception != null) {
+        //                 log.error("查询sku详情失败。原因：{}", exception.getMessage());
+        //                 throw new GulimallException("查询sku详情失败。原因：" + exception.getMessage());
+        //             }
+        //             return "";
+        //         });
+        // 6、等待任务完成
+        CompletableFuture.allOf(imageFuture, storageFuture, saleAttrFuture, spuDescriptionFuture, baseAttrFuture).get();
+
+        return skuItemVO;
     }
 }

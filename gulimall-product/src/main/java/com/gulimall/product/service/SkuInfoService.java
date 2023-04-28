@@ -8,8 +8,10 @@ import com.gulimall.product.dto.SpuSkuDTO;
 import com.gulimall.product.entity.SkuInfoEntity;
 import com.gulimall.product.entity.SpuInfoEntity;
 import com.gulimall.product.vo.SkuInfoVO;
+import com.gulimall.product.vo.SkuItemVO;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * sku信息
@@ -44,5 +46,13 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @return
      */
     List<ProductPutawayEsDTO> listSkusBySpuId(String spuId);
+
+    /**
+     * 查询sku详细信息
+     *
+     * @param skuId
+     * @return
+     */
+    SkuItemVO getSkuDetailBySkuId(Long skuId) throws ExecutionException, InterruptedException;
 }
 

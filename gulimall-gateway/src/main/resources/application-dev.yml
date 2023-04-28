@@ -73,13 +73,13 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*), /admin/$\{segment}
 
-        # 首页
+        # 首页、商品详情页
         - id: gulimall_host_route
           # 匹配后提供服务的地址
           uri: lb://gulimall-product
           # 匹配规则
           predicates:
-          - Host=gulimall.com
+          - Host=gulimall.com,item.gulimall.com
           # 过滤器配置
           filters:
             # 路径重写 /** ==> /product/**

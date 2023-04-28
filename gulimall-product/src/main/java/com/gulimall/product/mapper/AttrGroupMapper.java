@@ -1,9 +1,11 @@
 package com.gulimall.product.mapper;
 
-import com.gulimall.product.entity.AttrGroupEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.gulimall.product.entity.AttrGroupEntity;
 import com.gulimall.product.vo.AttrGroupResponseVO;
+import com.gulimall.product.vo.SpuBaseAttrVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,4 +26,13 @@ public interface AttrGroupMapper extends BaseMapper<AttrGroupEntity> {
      * @return
      */
     List<AttrGroupResponseVO> listAttrGroupWithAttr(Long catelogId);
+
+    /**
+     * 通过spuId、分类id查询规格参数信息
+     *
+     * @param spuId
+     * @param catalogId
+     * @return
+     */
+    List<SpuBaseAttrVO> listAttrGroupWithAttrsBySpuIdAndCatalogId(@Param("spuId") Long spuId, @Param("catalogId") Long catalogId);
 }
