@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gulimall</groupId>
+        <artifactId>gulimall</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <groupId>com.gulimall</groupId>
+    <artifactId>gulimall-auth</artifactId>
+    <version>1.0</version>
+    <name>gulimall-auth</name>
+    <description>谷粒商城-认证服务</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- 谷粒商城-公共模块-核心模块 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-common-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.baomidou</groupId>
+                    <artifactId>mybatis-plus-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!-- 谷粒商城-公共模块-缓存配置模块 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-common-cache</artifactId>
+        </dependency>
+
+        <!-- 谷粒商城-会员服务-对内接口 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-api-member</artifactId>
+            <version>${gulimall.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
