@@ -28,6 +28,6 @@ public interface ProductEsFeignClient {
      * @return
      */
     @PostMapping("/feign/product-putaway")
-    public R<?> productPutaway(@RequestBody List<ProductPutawayEsDTO> productPutawayEsDTOs);
+    R<?> productPutaway(@RequestBody List<ProductPutawayEsDTO> productPutawayEsDTOs);
 
 }

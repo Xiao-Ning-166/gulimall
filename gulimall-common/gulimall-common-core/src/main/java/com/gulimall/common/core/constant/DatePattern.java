@@ -1,4 +1,4 @@
-package com.gulimall.common.core.constants;
+package com.gulimall.common.core.constant;
 
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;

@@ -1,7 +1,7 @@
 package com.gulimall.common.core.vo;
 
 
-import com.gulimall.common.core.constants.ResponseCodeEnum;
+import com.gulimall.common.core.constant.ResponseCodeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

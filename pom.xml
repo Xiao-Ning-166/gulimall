@@ -28,6 +28,8 @@
         <module>gulimall-coupon</module>
         <module>gulimall-api</module>
         <module>gulimall-search</module>
+        <!-- 认证服务 -->
+        <module>gulimall-auth</module>
     </modules>
 
     <properties>
@@ -150,6 +152,13 @@
             <dependency>
                 <groupId>com.gulimall</groupId>
                 <artifactId>gulimall-api-storage</artifactId>
+                <version>${gulimall.version}</version>
+            </dependency>
+
+            <!-- 谷粒商城-会员服务-对内接口 -->
+            <dependency>
+                <groupId>com.gulimall</groupId>
+                <artifactId>gulimall-api-member</artifactId>
                 <version>${gulimall.version}</version>
             </dependency>
 

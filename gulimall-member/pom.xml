@@ -33,6 +33,13 @@
             <groupId>com.gulimall</groupId>
             <artifactId>gulimall-common-database</artifactId>
         </dependency>
+
+        <!-- 谷粒商城-会员服务-对内接口 -->
+        <dependency>
+            <groupId>com.gulimall</groupId>
+            <artifactId>gulimall-api-member</artifactId>
+            <version>${gulimall.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

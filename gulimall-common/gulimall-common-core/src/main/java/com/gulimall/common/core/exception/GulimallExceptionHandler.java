@@ -1,6 +1,6 @@
 package com.gulimall.common.core.exception;
 
-import com.gulimall.common.core.constants.ResponseCodeEnum;
+import com.gulimall.common.core.constant.ResponseCodeEnum;
 import com.gulimall.common.core.vo.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;

@@ -4,12 +4,12 @@ import com.gulimall.common.core.constant.ResponseCodeEnum;
 import org.springframework.http.HttpStatus;
 
 /**
- * 自定义全局异常
+ * 用户名不唯一异常
  *
  * @author xiaoning
  * @date 2023/03/15
  */
-public class GulimallException extends RuntimeException {
+public class UsernameNotUniqueException extends RuntimeException {
 
     /**
      *
@@ -27,22 +27,26 @@ public class GulimallException extends RuntimeException {
         return httpStatusCode;
     }
 
-    public GulimallException(ResponseCodeEnum responseCodeEnum) {
+    public UsernameNotUniqueException() {
+        this(ResponseCodeEnum.USERNAME_NOT_UNIQUE_10401);
+    }
+
+    public UsernameNotUniqueException(ResponseCodeEnum responseCodeEnum) {
         super(responseCodeEnum.getMessage());
         this.httpStatusCode = responseCodeEnum.getCode();
     }
 
-    public GulimallException(Integer httpStatusCode, Object object) {
+    public UsernameNotUniqueException(Integer httpStatusCode, Object object) {
         this.httpStatusCode = httpStatusCode;
         this.object = object;
     }
 
-    public GulimallException(String message) {
+    public UsernameNotUniqueException(String message) {
         super(message);
         this.httpStatusCode = HttpStatus.BAD_REQUEST.value();
     }
 
-    public GulimallException(String message, Object object) {
+    public UsernameNotUniqueException(String message, Object object) {
         super(message);
         this.httpStatusCode = HttpStatus.BAD_REQUEST.value();;
         this.object = object;

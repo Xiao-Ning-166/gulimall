@@ -1,4 +1,4 @@
-package com.gulimall.common.core.constants;
+package com.gulimall.common.core.constant;
 
 /**
  * 响应码
@@ -21,7 +21,22 @@ public enum ResponseCodeEnum {
     /**
      * 用户参数校验失败
      */
-    USER_ERROR_10400(10400, "参数格式校验失败");
+    USER_ERROR_10400(10400, "参数格式校验失败"),
+
+    /**
+     * 用户名不唯一
+     */
+    USERNAME_NOT_UNIQUE_10401(10401, "用户名不唯一"),
+
+    /**
+     * 手机号不唯一
+     */
+    PHONE_NOT_UNIQUE_10402(10402, "手机号不唯一"),
+
+    /**
+     * 账号或密码错误
+     */
+    USER_LOGIN_FAILED_10403(10403, "账号或密码错误");
 
     /**
      * 错误码

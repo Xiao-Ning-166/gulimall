@@ -14,6 +14,18 @@ spring:
             # 路径重写 /api/** ==> /**
             - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+        # 认证服务
+        - id: auth_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-auth
+          # 匹配规则
+          predicates:
+            - Path=/api/auth/**
+          # 过滤器配置
+          filters:
+            # 路径重写 /api/** ==> /**
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
         # 会员服务
         - id: member_route
           # 匹配后提供服务的地址
@@ -79,7 +91,7 @@ spring:
           uri: lb://gulimall-product
           # 匹配规则
           predicates:
-          - Host=gulimall.com,item.gulimall.com
+            - Host=gulimall.com,item.gulimall.com
           # 过滤器配置
           filters:
             # 路径重写 /** ==> /product/**
@@ -96,6 +108,18 @@ spring:
           filters:
             # 路径重写 /** ==> /search/**
             - RewritePath=/(?<segment>.*), /search/$\{segment}
+
+        # 登录、注册
+        - id: auth_host_route
+          # 匹配后提供服务的地址
+          uri: lb://gulimall-auth
+          # 匹配规则
+          predicates:
+            - Host=auth.gulimall.com
+          # 过滤器配置
+          filters:
+            # 路径重写 /** ==> /search/**
+            - RewritePath=/(?<segment>.*), /auth/$\{segment}
 
       discovery:
         locator:
